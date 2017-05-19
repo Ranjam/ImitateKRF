@@ -1,5 +1,6 @@
 #include "AppDelegate.h"
 #include "WelcomeScene.h"
+#include "BaseMap.h"
 
 USING_NS_CC;
 
@@ -67,8 +68,10 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	register_all_packages();
 
 	// create a scene. it's an autorelease object
-	auto scene = WelcomeScene::createScene();
-
+	//auto scene = WelcomeScene::createScene();
+	auto scene = Scene::create();
+	auto layer = BaseMap::create();
+	scene->addChild(layer);
 	// run
 	director->runWithScene(scene);
 
