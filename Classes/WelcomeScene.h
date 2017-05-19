@@ -13,6 +13,8 @@ public:
 
 	void startButtonAnimationCallback(float dt);
 
+	void setSaveSlotMenu();
+
 	static WelcomeScene* create() {
 		WelcomeScene *pRet = new(std::nothrow) WelcomeScene(); 
 		if (pRet && pRet->init()) {
@@ -22,6 +24,11 @@ public:
 		delete pRet; 
 		pRet = nullptr; 
 		return nullptr;
+	};
+
+private:
+	enum Tag {
+		START_BUTTON, CLOSE_BUTTON, SLOT_MENU
 	};
 };
 
