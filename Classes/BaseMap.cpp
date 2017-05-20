@@ -11,11 +11,13 @@ bool BaseMap::init() {
 	if (!Layer::init()) {
 		return false;
 	}
-	loadLevelData();
+	
+	//loadMonsterData();
+	//loadPathData();
 	return true;
 }
 
-void BaseMap::loadLevelData() {
+void BaseMap::loadMonsterData() {
 	auto data_map = FileUtils::getInstance()->getValueMapFromFile("level01.plist");
 
 	// 初始数据
@@ -28,7 +30,7 @@ void BaseMap::loadLevelData() {
 	// 本关所有怪物
 	auto all_monsters = data_map.at("monsters").asValueVector();
 	for (int i = 0; i < all_monsters.size(); ++i) {
-		Vector<Vector<Monster *>> wave_monsters;
+		std::vector<Vector<Monster *>> wave_monsters;
 		// 本波所有怪物
 		auto all_wave_monsters = all_monsters.at(i).asValueVector();
 		for (int j = 0; j < all_wave_monsters.size(); ++j) {
@@ -42,10 +44,32 @@ void BaseMap::loadLevelData() {
 				auto road = monster.at("road").asInt();
 				frame_monsters.pushBack(Monster::create(type, road, path));
 			}
-			wave_monsters.pushBack(frame_monsters);
+			wave_monsters.push_back(frame_monsters);
 			frame_monsters.clear();
 		}
-		monsters_.pushBack(wave_monsters);
+		monsters_.push_back(wave_monsters);
 		wave_monsters.clear();
+	}
+}
+
+void BaseMap::loadPathData() {
+	auto path_map = FileUtils::getInstance()->getValueMapFromFile("level0_paths.plist");
+
+	auto path_array = path_map.at("paths").asValueVector();
+	for (int i = 0; i < path_array.size(); ++i) {
+		std::vector<std::vector<Vec2>> all_paths;
+		auto paths = path_array.at(i).asValueVector();
+		for (int j = 0; j < paths.size(); ++j) {
+			std::vector<Vec2> single_path;
+			auto path = paths.at(j).asValueVector();
+			for (int k = 0; k < path.size(); ++k) {
+				auto point = path.at(k).asValueMap();
+				single_path.push_back(Vec2(point.at("x").asFloat(), point.at("y").asFloat()));
+			}
+			all_paths.push_back(single_path);
+			single_path.clear();
+		}
+		monster_paths_.push_back(all_paths);
+		all_paths.clear();
 	}
 }

@@ -19,15 +19,16 @@ public:
 
 	bool init() override;
 
-	void loadLevelData();
+	void loadMonsterData();
+
+	void loadPathData();
 
 private:
-	Vector<Vector<Vector<Monster *>>> monsters_;
+	std::vector<std::vector<Vector<Monster *>>> monsters_;
+	std::vector<std::vector<std::vector<Vec2>>> monster_paths_;
 	std::string start_gold_;
 	std::string start_life_;
 	std::string start_wave_;
 };
 
 #endif
-
-
