@@ -3,7 +3,6 @@
 GameUI::GameUI() {
 }
 
-
 GameUI::~GameUI() {
 }
 
@@ -14,83 +13,104 @@ bool GameUI::init() {
 	}
 
 	// set meteor skill
-	setMeteor();
+	addSkill("power_portrait_fireball_0001.png", "power_portrait_fireball_0002.png");
+	addSkill("power_portrait_reinforcement_0001.png", "power_portrait_reinforcement_0002.png");
 
 	// select target screen
 	select_target_ = EventListenerTouchOneByOne::create();
 	select_target_->setSwallowTouches(true);
 	select_target_->onTouchBegan = [=](Touch *touch, Event *event)->bool {
+		int k = 0;
+		for (k = 0; k < skills.size(); ++k) {
+			if (skills[k].on_click) {
+				break;
+			}
+		}
+
 		// resume background
-		auto meteor_bg = static_cast<Sprite *>(this->getChildByTag(METEOR_BG));
-		meteor_bg->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("power_portrait_fireball_0001.png"));
+		skills[k].background->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(skills[k].normal_image));
+
 		// open progress
-		auto meteor_prog = this->getChildByTag(METEOR_PROG);
-		meteor_prog->setVisible(true);
-		schedule(schedule_selector(GameUI::updateMeteor), 1.0f / 30);
-		_eventDispatcher->pauseEventListenersForTarget(meteor_prog);
+		skills[k].on_click = false;
+		skills[k].on_doing = true;
+		skills[k].progress_timer->setVisible(true);
+		_eventDispatcher->pauseEventListenersForTarget(skills[k].progress_timer);
 		select_target_->setEnabled(false);
-		// close meteor
-		on_meteor_ = false;
 		return true;
 	};
+
 	select_target_->setEnabled(false);
 	_eventDispatcher->addEventListenerWithFixedPriority(select_target_, 1);
+
+	schedule(schedule_selector(GameUI::updateSkills));
 
 	return true;
 }
 
-void GameUI::setMeteor() {
-	// meteor skill backgournd
-	auto meteor_bg = Sprite::createWithSpriteFrameName("power_portrait_fireball_0001.png");
-	meteor_bg->setAnchorPoint(Vec2(0, 0));
-	meteor_bg->setPosition(10, 10);
-	this->addChild(meteor_bg, 1);
-	meteor_bg->setTag(METEOR_BG);
+void GameUI::addSkill(const char *skill_image, const char *skill_active_image) {
+	int skill_id = skills.size();
+	// add skill backgournd
+	auto skill_bg = Sprite::createWithSpriteFrameName(skill_image);
+	skill_bg->setAnchorPoint(Vec2(0, 0));
+	skill_bg->setPosition(skill_id * skill_bg->getContentSize().width + 10.0f, 10.0f);
+	this->addChild(skill_bg, 0);
 
-	// meteor skill progress
-	auto meteor_prog = ProgressTimer::create(Sprite::createWithSpriteFrameName("power_loading.png"));
-	meteor_prog->setAnchorPoint(Point(0, 0));
-	meteor_prog->setReverseDirection(true);
-	meteor_prog->setPosition(Point(10, 10));
-	meteor_prog->setPercentage(100);
-	meteor_prog->setVisible(false);
-	this->addChild(meteor_prog, 1);
-	meteor_prog->setTag(METEOR_PROG);
+	// the skill progress
+	auto skill_progress = ProgressTimer::create(Sprite::createWithSpriteFrameName("power_loading.png"));
+	skill_progress->setAnchorPoint(Point(0, 0));
+	skill_progress->setReverseDirection(true);
+	skill_progress->setPosition(skill_bg->getPosition());
+	skill_progress->setPercentage(100);
+	skill_progress->setVisible(false);
+	this->addChild(skill_progress, 1);
 
-	// add meteor skill listener
-	auto meteor_listener = EventListenerTouchOneByOne::create();
+	// add skill listener
+	auto skill_listener = EventListenerTouchOneByOne::create();
 	// UI swallow event
-	meteor_listener->setSwallowTouches(true);
+	skill_listener->setSwallowTouches(true);
 
-	meteor_listener->onTouchBegan = [=](Touch *touch, Event *event)->bool {
-		if (meteor_prog->getBoundingBox().containsPoint(this->convertTouchToNodeSpace(touch))) {
+	skill_listener->onTouchBegan = [=](Touch *touch, Event *event)->bool {
+		if (skill_progress->getBoundingBox().containsPoint(this->convertTouchToNodeSpace(touch))) {
 			return true;
 		}
 		return false;
 	};
 
-	meteor_listener->onTouchEnded = [=](Touch *touch, Event *event) {
-		if (!on_meteor_) {
-			on_meteor_ = true;
-			meteor_bg->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("power_portrait_fireball_0002.png"));
+	skill_listener->onTouchEnded = [=](Touch *touch, Event *event) {
+		resetSkillsClick();
+		if (!skills[skill_id].on_click) {
+			skills[skill_id].on_click = true;
+			skill_bg->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(skill_active_image));
 			select_target_->setEnabled(true);
 		} else {
-			on_meteor_ = false;
-			meteor_bg->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("power_portrait_fireball_0001.png"));
+			skills[skill_id].on_click = false;
+			skill_bg->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(skill_image));
+			select_target_->setEnabled(false);
 		}
 	};
 
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(meteor_listener, meteor_prog);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(skill_listener, skill_progress);
+	// ready for next
+	skills.push_back({ false, false, skill_progress, skill_bg, skill_image, skill_active_image });
 }
 
-void GameUI::updateMeteor(float dt) {
-	auto meteor_prog = static_cast<ProgressTimer *>(this->getChildByTag(METEOR_PROG));
-	if (meteor_prog->getPercentage() <= 0) {
-		meteor_prog->setVisible(false);
-		meteor_prog->setPercentage(100);
-		unschedule(schedule_selector(GameUI::updateMeteor));
-		_eventDispatcher->resumeEventListenersForTarget(meteor_prog);
-		return;
+void GameUI::updateSkills(float dt) {
+	for (int i = 0; i < skills.size(); ++i) {
+		if (skills[i].on_doing) {
+			if (skills[i].progress_timer->getPercentage() <= 0) {
+				skills[i].progress_timer->setVisible(false);
+				skills[i].progress_timer->setPercentage(100);
+				skills[i].on_doing = false;
+				_eventDispatcher->resumeEventListenersForTarget(skills[i].progress_timer);
+			}
+			skills[i].progress_timer->setPercentage(skills[i].progress_timer->getPercentage() - 1.0f);
+		}
 	}
-	meteor_prog->setPercentage(meteor_prog->getPercentage() - 1.0f);
+}
+
+void GameUI::resetSkillsClick() {
+	for (int i = 0; i < skills.size(); ++i) {
+		skills[i].on_click = false;
+		skills[i].background->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(skills[i].normal_image));
+	}
 }

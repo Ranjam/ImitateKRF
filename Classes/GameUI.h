@@ -5,6 +5,15 @@
 
 USING_NS_CC;
 
+struct SkillRecord {
+	bool on_click;
+	bool on_doing;
+	ProgressTimer *progress_timer;
+	Sprite *background;
+	std::string normal_image;
+	std::string active_image;
+};
+
 class GameUI: public Layer {
 public:
 	GameUI();
@@ -15,13 +24,16 @@ public:
 	bool init() override;
 
 	// fire skill set and update
-	void setMeteor();
+	void addSkill(const char *skill_image, const char *skill_active_image);
 
-	void updateMeteor(float dt);
+	void updateSkills(float dt);
+
+	void resetSkillsClick();
 
 private:
 	EventListenerTouchOneByOne *select_target_;
-	bool on_meteor_ = false;
+
+	std::vector<SkillRecord> skills;
 
 private:
 	enum Tag {
