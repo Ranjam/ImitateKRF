@@ -1,4 +1,5 @@
 #include "WarningFlag.h"
+#include "Resources.h"
 
 WarningFlag::WarningFlag() {
 }
@@ -10,9 +11,6 @@ bool WarningFlag::init() {
 	if (!Sprite::init()) {
 		return false;
 	}
-	// load file
-	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("ingame_gui-hd.plist");
-	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("common_spritesheet_32-hd.plist");
 
 	// progressTimer_
 	progressTimer_ = ProgressTimer::create(Sprite::createWithSpriteFrameName("waveFlag_0003.png"));
@@ -40,6 +38,10 @@ bool WarningFlag::init() {
 
 void WarningFlag::setSpeed(float speed) {
 	this->speed_ = speed;
+}
+
+float WarningFlag::getPercentage() const {
+	return this->progressTimer_->getPercentage();
 }
 
 void WarningFlag::restart() {

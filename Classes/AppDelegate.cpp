@@ -1,6 +1,7 @@
 #include "AppDelegate.h"
 #include "WelcomeScene.h"
-#include "BaseMap.h"
+#include "Loading.h"
+#include "FightScene.h"
 
 USING_NS_CC;
 
@@ -67,10 +68,14 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
 	register_all_packages();
 
+	// loading assects
+	Loading load;
+	load.init();
+
 	// create a scene. it's an autorelease object
 	//auto scene = WelcomeScene::createScene();
 	auto scene = Scene::create();
-	auto layer = BaseMap::create();
+	auto layer = FightScene::create();
 	scene->addChild(layer);
 	// run
 	director->runWithScene(scene);

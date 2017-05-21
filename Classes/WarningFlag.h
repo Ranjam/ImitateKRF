@@ -31,6 +31,8 @@ public:
 	 */
 	void setSpeed(float speed);
 
+	float getPercentage() const;
+
 	void restart();
 
 	void stop();

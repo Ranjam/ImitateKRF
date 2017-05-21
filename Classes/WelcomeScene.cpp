@@ -19,10 +19,6 @@ bool WelcomeScene::init() {
 		return false;
 	}
 
-	// Load sprite frame
-	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("mainmenu_spritesheet_32_1-hd.plist");
-	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("mainmenu_spritesheet_32_2-hd.plist");
-
 	// Add background
 	auto sprite_background = Sprite::createWithSpriteFrameName("mainmenu_bg.png");
 	sprite_background->setPosition(Vec2(winSize.width / 2.0f, winSize.height / 2.0f));
