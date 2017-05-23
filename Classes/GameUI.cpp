@@ -77,8 +77,8 @@ void GameUI::addSkill(const char *skill_image, const char *skill_active_image) {
 	};
 
 	skill_listener->onTouchEnded = [=](Touch *touch, Event *event) {
-		resetSkillsClick();
 		if (!skills[skill_id].on_click) {
+			resetSkillsClick();
 			skills[skill_id].on_click = true;
 			skill_bg->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(skill_active_image));
 			select_target_->setEnabled(true);
