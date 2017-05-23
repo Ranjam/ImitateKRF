@@ -1,6 +1,7 @@
 #include "FightScene.h"
 #include "Resources.h"
 #include "Common.h"
+#include "DesertThug.h"
 
 FightScene::FightScene() { }
 
@@ -12,7 +13,7 @@ bool FightScene::init() {
 	}
 	
 	// load monster data
-	loadMonsterData();
+	// loadMonsterData();
 
 	// load paths data
 	loadPathData();
@@ -22,6 +23,11 @@ bool FightScene::init() {
 
 	ui_ = GameUI::create();
 	this->addChild(ui_, ZORDER::GAME_UI);
+
+	Monster *monster = DesertThug::create(0, 0, monster_paths_.at(0).at(0));
+	monster->setPosition(monster_paths_.at(0).at(0).at(0));
+	this->addChild(monster);
+	monster->keepGoing();
 
 	return true;
 }
@@ -51,7 +57,7 @@ void FightScene::loadMonsterData() {
 				auto type = monster.at("type").asInt();
 				auto path = monster.at("path").asInt();
 				auto road = monster.at("road").asInt();
-				frame_monsters.pushBack(Monster::create(type, road, path));
+				// frame_monsters.pushBack(Monster::create(type, road, path));
 			}
 			wave_monsters.push_back(frame_monsters);
 			frame_monsters.clear();
@@ -100,6 +106,9 @@ void FightScene::updateWaves(float dt) {
 }
 
 void FightScene::addMonsters(float dt) {
+
+
+
 
 	//static float timing = 0.0f;
 	//if (timing >= 15.0f) {

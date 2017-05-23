@@ -77,7 +77,7 @@ bool WelcomeScene::init() {
 
 void WelcomeScene::logoAnimationCallback(float dt) {
 	SpriteFrame *frame;
-	Vector<SpriteFrame *> sprite_frames(20);
+	Vector<SpriteFrame *> sprite_frames;
 	for (int i = 1; i < 27; ++i) {
 		frame = SpriteFrameCache::getInstance()->getSpriteFrameByName(StringUtils::format("logo_brillo_00%02d.png", i));
 		if (frame != nullptr) {

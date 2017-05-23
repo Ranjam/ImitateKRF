@@ -11,5 +11,7 @@ static const char *s_mainmenu_spritesheet2 = "mainmenu_spritesheet_32_2-hd.plist
 static const char *s_level_01_plist = "level01.plist";
 static const char *s_level_01_path_plist = "level0_paths.plist";
 static const char *s_sprite_level_0 = "sprite_level_0_2-hd.plist";
+static const char *s_enemy_desert_0 = "enemies_desert-hd.plist";
+static const char *s_tower = "towers-hd.plist";
 
 #endif

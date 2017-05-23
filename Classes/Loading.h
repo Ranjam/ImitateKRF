@@ -13,6 +13,10 @@ public:
 	~Loading();
 
 	bool init();
+
+	void loadingAssets();
+
+	void loadingAnimations();
 };
 
 #endif
