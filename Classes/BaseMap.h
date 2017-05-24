@@ -11,9 +11,9 @@ public:
 	~BaseMap();
 
 	static BaseMap* create(int level) {
-		BaseMap *pRet = new(std::nothrow) BaseMap(); 
+		BaseMap* pRet = new(std::nothrow) BaseMap();
 		if (pRet && pRet->init(level)) {
-			pRet->autorelease(); 
+			pRet->autorelease();
 			return pRet;
 		}
 		delete pRet;
@@ -22,6 +22,11 @@ public:
 	};
 
 	bool init(int level);
+
+	const Size &getContentSize() const override;
+
+private:
+	Sprite *map_;
 };
 
 #endif

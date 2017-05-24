@@ -33,15 +33,21 @@ public:
 
 	float getPercentage() const;
 
-	void restart();
+	void start();
 
 	void stop();
 
 	void updateProgress(float dt);
 
+	bool isOver() const {
+		return is_over_;
+	}
+
 private:
 	ProgressTimer *progressTimer_;
 	float speed_ = 1.5f;
+	bool is_selected_ = false;
+	bool is_over_ = true;
 };
 
 #endif

@@ -86,11 +86,12 @@ void DesertThug::setState(MonsterState state) {
 }
 
 void DesertThug::keepGoing() {
-	static int i = 1;
-	if (i < path_.size() && this->getPosition() != path_[i]) {
+	//static int current_point_ = 1; // there can't use static
 
-		float dx = path_[i].x * 1.08 - this->getPosition().x;
-		float dy = path_[i].y * 1.25 - this->getPosition().y;
+	if (current_point_ < path_.size() && this->getPosition() != path_[current_point_]) {
+
+		float dx = path_[current_point_].x * 1.08 - this->getPosition().x;
+		float dy = path_[current_point_].y * 1.25 - this->getPosition().y;
 		
 		if (fabs(dy) > fabs(dx) && dy > 0) {
 			// up
@@ -106,7 +107,7 @@ void DesertThug::keepGoing() {
 			setState(MonsterState::WALK_RIGHT);
 		}
 		//this->runAction(Sequence::create(MoveTo::create(path_[i].distance(this->getPosition()) / 13.0f, path_[i]), CallFunc::create(CC_CALLBACK_0(DesertThug::keepGoing, this)), NULL));
-		this->runAction(Sequence::create(MoveTo::create(0.3f, Vec2(path_[i].x * 1.08, path_[i].y * 1.25)), CallFunc::create(CC_CALLBACK_0(DesertThug::keepGoing, this)), NULL));
-		++i;
+		this->runAction(Sequence::create(MoveTo::create(0.3f, Vec2(path_[current_point_].x * 1.08, path_[current_point_].y * 1.25)), CallFunc::create(CC_CALLBACK_0(DesertThug::keepGoing, this)), NULL));
+		++current_point_;
 	}
 }

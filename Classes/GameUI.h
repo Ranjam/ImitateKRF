@@ -2,6 +2,7 @@
 #define GAME_UI_H
 
 #include "cocos2d.h"
+#include "WarningFlag.h"
 
 USING_NS_CC;
 

@@ -26,6 +26,9 @@ public:
 	void setState(MonsterState state) override;
 
 	void keepGoing() override;
+
+private:
+	int current_point_ = 1; // current point
 };
 
 #endif

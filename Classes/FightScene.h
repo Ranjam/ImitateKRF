@@ -2,9 +2,7 @@
 #define FIGHT_SCENE_H
 
 #include "cocos2d.h"
-#include "Monster.h"
-#include "WarningFlag.h"
-#include "BaseMap.h"
+#include "Battlefield.h"
 #include "GameUI.h"
 
 USING_NS_CC;
@@ -20,34 +18,22 @@ public:
 
 	bool init() override;
 
-	void loadMonsterData();
-
-	void loadPathData();
-
-	// todo: wave func
-	void updateWaves(float dt);
-	// todo: monster func
-	void addMonsters(float dt);
-
 private:
-	// all monsters
-	std::vector<std::vector<Vector<Monster *>>> monsters_;
-	// monster's paths
-	std::vector<std::vector<std::vector<Vec2>>> monster_paths_;
-	// wave flags
-	Vector<WarningFlag *> warning_flags_;
-
+	// go GameUI
 	int start_gold_;
 	int start_life_;
+
+	// go battlefield
 	int max_wave_;
 
-	int current_wave_;
+public: 
+	void loadMonsterData();
 
 private:
-	BaseMap *map_;
+	Battlefield *battle_field_;
 	GameUI *ui_;
 	enum ZORDER {
-		MAP, GAME_UI
+		BATTLEFIELD, GAME_UI
 	};
 };
 
