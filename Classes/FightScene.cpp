@@ -29,6 +29,21 @@ bool FightScene::init() {
 	this->addChild(monster);
 	monster->keepGoing();
 
+	Monster *monster2 = DesertThug::create(0, 0, monster_paths_.at(0).at(1));
+	monster2->setPosition(monster_paths_.at(0).at(1).at(0));
+	this->addChild(monster2);
+	monster2->keepGoing();
+
+	Monster *monster3 = DesertThug::create(0, 0, monster_paths_.at(0).at(2));
+	monster3->setPosition(monster_paths_.at(0).at(2).at(0));
+	this->addChild(monster3);
+	monster3->keepGoing();
+
+	Monster *monster4 = DesertThug::create(0, 0, monster_paths_.at(1).at(2));
+	monster4->setPosition(monster_paths_.at(1).at(2).at(0));
+	map_->addChild(monster4);
+	monster4->keepGoing();
+
 	return true;
 }
 
@@ -106,9 +121,6 @@ void FightScene::updateWaves(float dt) {
 }
 
 void FightScene::addMonsters(float dt) {
-
-
-
 
 	//static float timing = 0.0f;
 	//if (timing >= 15.0f) {
