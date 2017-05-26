@@ -1,4 +1,3 @@
-#pragma once
 
 #ifndef WARNING_FLAG_H
 #define WARNING_FLAG_H
