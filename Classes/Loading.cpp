@@ -26,7 +26,10 @@ void Loading::loadingAssets() {
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile(s_mainmenu_spritesheet2);
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile(s_sprite_level_0);
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile(s_enemy_desert_0);
+	SpriteFrameCache::getInstance()->addSpriteFramesWithFile(s_enemy_desert_3);
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile(s_tower);
+	SpriteFrameCache::getInstance()->addSpriteFramesWithFile(s_map_sprite);
+	SpriteFrameCache::getInstance()->addSpriteFramesWithFile(s_common_sprite_sheet2);
 }
 
 void Loading::loadingAnimations() {

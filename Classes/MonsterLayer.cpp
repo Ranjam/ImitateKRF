@@ -80,7 +80,7 @@ void MonsterLayer::loadMonstersData() {
 
 void MonsterLayer::nextWave(float dt) {
 	// every wave
-	if (current_frame_ < monsters_[current_wave_].size()) {
+	if (current_wave_ < monsters_.size() && current_frame_ < monsters_[current_wave_].size()) {
 		wave_over_ = false;
 		// every frame per 5 seconds
 		schedule(schedule_selector(MonsterLayer::nextWave), 3.0f);
@@ -94,7 +94,6 @@ void MonsterLayer::nextWave(float dt) {
 		current_frame_ = 0;
 		current_wave_++;
 		unschedule(schedule_selector(MonsterLayer::nextWave));
-		//nextWave(0);
 	}
 }
 

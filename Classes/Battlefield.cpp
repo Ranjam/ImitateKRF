@@ -1,5 +1,6 @@
 #include "Battlefield.h"
 #include "Common.h"
+#include "Stronghold.h"
 
 Battlefield::Battlefield() {
 }
@@ -29,8 +30,13 @@ bool Battlefield::init(int level) {
 	auto flag = WarningFlag::create();
 	flag->setPosition(1085, winSize.height / 2 + 172);
 	flag->setSpeed(10);
-	this->addChild(flag);
+	this->addChild(flag, 2);
 	warning_flags_.pushBack(flag);
+
+	// stronghold
+	auto hold = Stronghold::create();
+	hold->setPosition(winSize.width / 2, winSize.height / 2);
+	this->addChild(hold, 1);
 
 	// on moved
 	auto touch_move_listener = EventListenerTouchOneByOne::create();
