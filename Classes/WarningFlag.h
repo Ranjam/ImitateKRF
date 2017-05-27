@@ -38,15 +38,27 @@ public:
 
 	void updateProgress(float dt);
 
+	void respiration();
+
 	bool isOver() const {
 		return is_over_;
 	}
 
+	int getPath() const {
+		return path_;
+	}
+
+	void setPath(int path) {
+		path_ = path;
+	}
+
 private:
 	ProgressTimer *progressTimer_;
+	Sprite *selected_;
 	float speed_ = 1.5f;
 	bool is_selected_ = false;
-	bool is_over_ = true;
+	bool is_over_ = false;
+	int path_;
 };
 
 #endif

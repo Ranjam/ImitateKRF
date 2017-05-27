@@ -4,7 +4,6 @@
 #include "cocos2d.h"
 #include "BaseMap.h"
 #include "MonsterLayer.h"
-#include "BattlefieldUI.h"
 
 USING_NS_CC;
 
@@ -26,10 +25,16 @@ public:
 
 	bool init(int level);
 
+	void updateWave(float dt);
+
+	void updateFlag(float dt);
+
 private:
 	BaseMap *map_;
 	MonsterLayer *monster_layer_;
-	BattlefieldUI *battlefield_ui_;
+
+	// wave flags
+	Vector<WarningFlag *> warning_flags_;
 };
 
 #endif

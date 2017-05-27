@@ -22,28 +22,6 @@ bool MonsterLayer::init() {
 	// load monsters data
 	loadMonstersData();
 
-	nextWave(0);
-
-	//Monster *monster = DesertThug::create(0, 0, monster_paths_.at(0).at(0));
-	//monster->setPosition(monster_paths_.at(0).at(0).at(0));
-	//this->addChild(monster);
-	//monster->keepGoing();
-
-	//Monster *monster2 = DesertThug::create(0, 0, monster_paths_.at(0).at(1));
-	//monster2->setPosition(monster_paths_.at(0).at(1).at(0));
-	//this->addChild(monster2);
-	//monster2->keepGoing();
-
-	//Monster *monster3 = DesertThug::create(0, 0, monster_paths_.at(0).at(2));
-	//monster3->setPosition(monster_paths_.at(0).at(2).at(0));
-	//this->addChild(monster3);
-	//monster3->keepGoing();
-
-	//Monster *monster4 = DesertThug::create(0, 0, monster_paths_.at(1).at(2));
-	//monster4->setPosition(monster_paths_.at(1).at(2).at(0));
-	//this->addChild(monster4);
-	//monster4->keepGoing();
-
 	return true;
 }
 
@@ -102,19 +80,21 @@ void MonsterLayer::loadMonstersData() {
 
 void MonsterLayer::nextWave(float dt) {
 	// every wave
-	static int current_frame = 0;
-	if (current_frame < monsters_[current_wave_].size()) {
+	if (current_frame_ < monsters_[current_wave_].size()) {
+		wave_over_ = false;
 		// every frame per 5 seconds
 		schedule(schedule_selector(MonsterLayer::nextWave), 3.0f);
-		for (int i = 0; i < monsters_[current_wave_][current_frame].size(); ++i) {
-			this->addChild(monsters_[current_wave_][current_frame].at(i));
-			monsters_[current_wave_][current_frame].at(i)->keepGoing();
+		for (int i = 0; i < monsters_[current_wave_][current_frame_].size(); ++i) {
+			this->addChild(monsters_[current_wave_][current_frame_].at(i), 3);
+			monsters_[current_wave_][current_frame_].at(i)->keepGoing();
 		}
-		++current_frame;
+		++current_frame_;
 	} else {
-		current_frame = 0;
+		wave_over_ = true;
+		current_frame_ = 0;
 		current_wave_++;
 		unschedule(schedule_selector(MonsterLayer::nextWave));
+		//nextWave(0);
 	}
 }
 
@@ -128,7 +108,7 @@ Monster* MonsterLayer::generateMonster(int type, int path, int road) {
 	}
 	default:
 	{
-		Monster *monster = DesertThug::create(0, 0, monster_paths_.at(road > 1 ? 1 : road).at(road > 2 ? 2 : road));
+		Monster *monster = DesertThug::create(0, 0, monster_paths_.at(0).at(0));
 		//monster->retain();
 		return monster;
 	}

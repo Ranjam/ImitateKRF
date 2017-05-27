@@ -14,6 +14,8 @@ bool Battlefield::init(int level) {
 		return false;
 	}
 
+	schedule(schedule_selector(Battlefield::updateWave), 1 / 60.0f);
+
 	// map
 	map_ = BaseMap::create(level);
 	map_->setAnchorPoint(Vec2(0, 0));
@@ -23,11 +25,12 @@ bool Battlefield::init(int level) {
 	monster_layer_ = MonsterLayer::create();
 	this->addChild(monster_layer_, 1);
 
-	// ui
-	battlefield_ui_ = BattlefieldUI::create();
-	this->addChild(battlefield_ui_, 2);
-
-	battlefield_ui_->addWarningFlags(winSize.width / 2, winSize.height / 2);
+	// warning flag
+	auto flag = WarningFlag::create();
+	flag->setPosition(1085, winSize.height / 2 + 172);
+	flag->setSpeed(10);
+	this->addChild(flag);
+	warning_flags_.pushBack(flag);
 
 	// on moved
 	auto touch_move_listener = EventListenerTouchOneByOne::create();
@@ -47,3 +50,22 @@ bool Battlefield::init(int level) {
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(touch_move_listener, this);
 	return true;
 }
+
+void Battlefield::updateWave(float dt) {
+	for (int i = 0; i < warning_flags_.size(); ++i) {
+		if (warning_flags_.at(i)->isOver() && monster_layer_->waveIsOver()) {
+			monster_layer_->nextWave(dt);
+			unschedule(schedule_selector(Battlefield::updateWave));
+			schedule(schedule_selector(Battlefield::updateFlag), dt);
+		}
+	}
+}
+
+void Battlefield::updateFlag(float dt) {
+	if (monster_layer_->waveIsOver() && warning_flags_.at(0)->isOver()) {
+		warning_flags_.at(0)->start();
+		unschedule(schedule_selector(Battlefield::updateFlag));
+		schedule(schedule_selector(Battlefield::updateWave));
+	}
+}
+
