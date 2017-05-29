@@ -14,13 +14,16 @@ bool BaseIcon::init() {
 		return false;
 	}
 
+	// background icon
 	this->initWithSpriteFrameName("main_icons_0014.png");
 
+	// confirm image
 	confirm_ = Sprite::createWithSpriteFrameName("main_icons_0019.png");
 	confirm_->setAnchorPoint(Vec2(0.0f, 0.0f));
 	confirm_->setVisible(false);
 	this->addChild(confirm_, 3);
 
+	// click listener
 	auto click_listener = EventListenerTouchOneByOne::create();
 	click_listener->setSwallowTouches(true);
 
@@ -33,10 +36,9 @@ bool BaseIcon::init() {
 
 	click_listener->onTouchEnded = [=](Touch *touch, Event *event) {
 		if (!selected_) {
-			confirm_->setVisible(true);
-		} else {
 			onClicked();
-			confirm_->setVisible(false);
+		} else {
+			onConfirmed();
 			static_cast<RingPanel *>(this->getParent())->hide();
 		}
 		selected_ = !selected_;

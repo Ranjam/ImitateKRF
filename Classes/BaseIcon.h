@@ -14,7 +14,13 @@ public:
 
 	bool init() override;
 
-	virtual void onClicked() { }
+	virtual void onConfirmed() {
+		confirm_->setVisible(false);
+	}
+
+	virtual void onClicked() {
+		confirm_->setVisible(true);
+	}
 
 protected:
 	Sprite *image_;
