@@ -13,17 +13,13 @@ public:
 
 	bool init() override;
 
-private:
 	enum TowerType {
 		ARCHER, MILITIA, MAGE, BOMBARD
 	};
 
+private:
 	// 类型
 	CC_SYNTHESIZE(TowerType, type_, Type);
-
-	// 建造点
-	// CC_SYNTHESIZE(Terrain*, myTerrain, MyTerrain);
-
 	// 名称
 	CC_SYNTHESIZE(std::string, tower_name_, TowerName);
 	// 等级
@@ -40,24 +36,23 @@ private:
 	CC_SYNTHESIZE(int, upgrade_price_, UpgradePrice);
 	// 售出时返还金钱
 	CC_SYNTHESIZE(int, selling_price, SellingPrice);
+	// 最近的敌人
+	CC_SYNTHESIZE(Monster *, nearest_monster_, NearestMonster);
 
 public:
-	virtual void upgradeTower() = 0;//升级防御塔（基础升级）  
-	virtual void sellTower() = 0;//售卖防御塔  
-	virtual void removeTower() = 0;//移除防御塔  
-	virtual void showTowerInfo() = 0;//显示防御塔信息  
-	virtual void upgradeOne() = 0;//两种升级方向  
+	virtual void upgradeTower() = 0; 
+	virtual void sellTower() = 0;
+	virtual void removeTower() = 0;
+	virtual void showTowerInfo() = 0; 
+	virtual void upgradeOne() = 0;
 	virtual void upgradeTwo() = 0;
-	virtual void setRallyPoint(Vec2 pos) = 0;//兵营塔的设置集结点
+	virtual void setRallyPoint(Vec2 pos) = 0;
 
 protected:
 	virtual void checkNearestMonster();//检测附近敌人  
 	//virtual void showUpgradeMenu();//显示升级选项
 	//virtual void hideUpgradeMenu();//隐藏
 	//void setListener();//设置某些监听事件
-
-	Sprite* terrain;//该塔的建造点  
-	Monster* nearestMonster;  //附近的敌人  
 };
 
 #endif

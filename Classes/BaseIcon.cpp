@@ -1,5 +1,6 @@
 #include "BaseIcon.h"
 #include "RingPanel.h"
+#include "Stronghold.h"
 
 
 BaseIcon::BaseIcon() {
@@ -30,16 +31,22 @@ bool BaseIcon::init() {
 	click_listener->onTouchBegan = [=](Touch *touch, Event *event)->bool {
 		if (this->getBoundingBox().containsPoint(this->getParent()->convertTouchToNodeSpace(touch))) {
 			return true;
+		} else {
+			confirm_->setVisible(false);
+			selected_ = false;
 		}
 		return false;
 	};
 
 	click_listener->onTouchEnded = [=](Touch *touch, Event *event) {
 		if (!selected_) {
+			// on clicked
+			confirm_->setVisible(true);
 			onClicked();
 		} else {
+			// confirmed
+			confirm_->setVisible(false);
 			onConfirmed();
-			static_cast<RingPanel *>(this->getParent())->hide();
 		}
 		selected_ = !selected_;
 	};

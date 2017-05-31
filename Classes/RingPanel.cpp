@@ -14,9 +14,7 @@ bool RingPanel::init() {
 		return false;
 	}
 
-	 //auto sprite = Sprite::createWithSpriteFrameName("");
 	this->initWithSpriteFrameName("gui_ring.png");
-	//this->addChild(sprite);
 
 	return true;
 }

@@ -21,9 +21,10 @@ bool ArchersTowerIcon::init() {
 }
 
 void ArchersTowerIcon::onConfirmed() {
-	confirm_->setVisible(false);
+	static_cast<RingPanel *>(this->getParent())->hide();
+	static_cast<Stronghold *>(this->getParent()->getParent())->hidePreview();
 }
 
 void ArchersTowerIcon::onClicked() {
-	confirm_->setVisible(true);
+	static_cast<Stronghold *>(this->getParent()->getParent())->showPreview(BaseTower::ARCHER);
 }

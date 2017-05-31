@@ -32,16 +32,17 @@ bool Stronghold::init() {
 	auto click_listener = EventListenerTouchOneByOne::create();
 	click_listener->onTouchBegan = [=](Touch *touch, Event *event)->bool {
 		if (sprite->getBoundingBox().containsPoint(this->convertTouchToNodeSpace(touch))) {
-
 			return true;
 		} else {
 			ring_panel_->hide();
+			this->hidePreview();
 		}
 		return false;
 	};
 	click_listener->onTouchEnded = [=](Touch *touch, Event *event) {
 		if (ring_panel_->isShow()) {
 			ring_panel_->hide();
+			this->hidePreview();
 		} else {
 			ring_panel_->show();
 		}
@@ -49,4 +50,35 @@ bool Stronghold::init() {
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(click_listener, sprite);
 
 	return true;
+}
+
+void Stronghold::showPreview(BaseTower::TowerType tower_type) {
+	// hide last preview
+	hidePreview();
+
+	// add preview
+	switch (tower_type) {
+		case BaseTower::ARCHER:
+			preview_ = Sprite::createWithSpriteFrameName("tower_preview_archer.png");
+			break;
+		case BaseTower::MILITIA:
+			preview_ = Sprite::createWithSpriteFrameName("tower_preview_barrack.png");
+			break;
+		case BaseTower::MAGE: 
+			preview_ = Sprite::createWithSpriteFrameName("tower_preview_mage.png");
+			break;
+		case BaseTower::BOMBARD: 
+			preview_ = Sprite::createWithSpriteFrameName("tower_preview_artillery.png");
+			break;
+		default: ;
+	}
+	if (preview_ != nullptr) {
+		this->addChild(preview_, 1);
+	}
+}
+
+void Stronghold::hidePreview() {
+	if (preview_ != nullptr) {
+		this->removeChild(preview_, true);
+	}
 }
