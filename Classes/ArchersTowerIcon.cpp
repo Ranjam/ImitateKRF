@@ -1,5 +1,6 @@
 #include "ArchersTowerIcon.h"
 #include "Stronghold.h"
+#include "ArchersTower.h"
 
 
 ArchersTowerIcon::ArchersTowerIcon() {
@@ -23,6 +24,7 @@ bool ArchersTowerIcon::init() {
 void ArchersTowerIcon::onConfirmed() {
 	static_cast<RingPanel *>(this->getParent())->hide();
 	static_cast<Stronghold *>(this->getParent()->getParent())->hidePreview();
+	static_cast<Stronghold *>(this->getParent()->getParent())->buildTower(BaseTower::TowerType::ARCHER);
 }
 
 void ArchersTowerIcon::onClicked() {

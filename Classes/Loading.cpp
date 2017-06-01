@@ -99,4 +99,16 @@ void Loading::loadingAnimations() {
 	AnimationCache::getInstance()->addAnimation(Animation::createWithSpriteFrames(sprites, 0.1f),
 												"desert_thug_stand");
 	sprites.clear();
+
+
+	// building smoke effect
+	for (int i = 1; i <= 10; ++i) {
+		sprite_frame = SpriteFrameCache::getInstance()->getSpriteFrameByName(StringUtils::format("effect_buildSmoke_00%02d.png", i));
+		if (sprite_frame != nullptr) {
+			sprites.pushBack(sprite_frame);
+		}
+	}
+	AnimationCache::getInstance()->addAnimation(Animation::createWithSpriteFrames(sprites, 0.1f),
+												"building_smoke_effect");
+	sprites.clear();
 }

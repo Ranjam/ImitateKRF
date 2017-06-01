@@ -35,7 +35,7 @@ bool Battlefield::init(int level) {
 
 	// stronghold
 	auto hold = Stronghold::create();
-	hold->setPosition(winSize.width / 2, winSize.height / 2);
+	hold->setPosition(winSize.width / 2 + 200, winSize.height / 2 + 180);
 	this->addChild(hold, 1);
 
 	// on moved

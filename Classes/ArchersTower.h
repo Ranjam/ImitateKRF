@@ -8,16 +8,27 @@ public:
 	ArchersTower();
 	~ArchersTower();
 
+	CREATE_FUNC(ArchersTower);
+
 	bool init() override;
 
 public:
-	virtual void upgradeTower() = 0;
-	virtual void sellTower() = 0;
-	virtual void removeTower() = 0;
-	virtual void showTowerInfo() = 0;
-	virtual void upgradeOne() = 0;
-	virtual void upgradeTwo() = 0;
-	virtual void setRallyPoint(Vec2 pos) = 0;
+	virtual void upgradeTower() {};
+	virtual void sellTower() {};
+	virtual void removeTower() {};
+	virtual void showTowerInfo() {};
+	virtual void upgradeOne() {};
+	virtual void upgradeTwo() {};
+	virtual void setRallyPoint(Vec2 pos) {};
+
+	void buildingAnimation() override;
+	void buildingSmokeAnimation() override;
+	void initTower(int level) override;
+
+private:
+	Sprite *tower_base_ = nullptr;
+	Sprite *archer_left_ = nullptr;
+	Sprite *archer_right_ = nullptr;
 };
 
 #endif

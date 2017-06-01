@@ -20,9 +20,19 @@ public:
 
 	void hidePreview();
 
+	void buildTower(BaseTower::TowerType tower_type);
+
+	void removeTower();
+
 private:
-	RingPanel *ring_panel_;
+	// stronghold background
+	Sprite *image_ = nullptr;
+	// ring panel
+	RingPanel *ring_panel_ = nullptr;
+	// tower preview
 	Sprite *preview_ = nullptr;
+	// tower
+	BaseTower *tower_ = nullptr;
 };
 
 #endif

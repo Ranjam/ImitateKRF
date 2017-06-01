@@ -2,9 +2,27 @@
 #include "GameManager.h"
 
 
-BaseTower::BaseTower() {
+BaseTower::BaseTower(
+	TowerType type,
+	std::string name,
+	int level,
+	float scope,
+	float next_scope,
+	float rate,
+	float power,
+	int upgrade_price,
+	int selling_price,
+	Monster* nearest_monster): 
+	  type_(type)
+	, level_(level)
+	, scope_(scope)
+	, next_scope_(next_scope)
+	, rate_(rate)
+	, power_(power)
+	, upgrade_price_(upgrade_price)
+	, selling_price(selling_price)
+	, nearest_monster_(nearest_monster) {
 }
-
 
 BaseTower::~BaseTower() {
 }
@@ -32,3 +50,4 @@ void BaseTower::checkNearestMonster() {
 		}
 	}
 }
+
