@@ -1,6 +1,7 @@
 #include "MonsterLayer.h"
 #include "DesertThug.h"
 #include "Resources.h"
+#include "GameManager.h"
 
 
 MonsterLayer::MonsterLayer() {
@@ -68,7 +69,9 @@ void MonsterLayer::loadMonstersData() {
 				auto type = monster.at("type").asInt();
 				auto path = monster.at("path").asInt();
 				auto road = monster.at("road").asInt();
-				frame_monsters.pushBack(generateMonster(type, path, road));
+				auto monster_temp = generateMonster(type, path, road);
+				frame_monsters.pushBack(monster_temp);
+				GameManager::getInstance()->Monsters().pushBack(monster_temp);
 			}
 			wave_monsters.push_back(frame_monsters);
 			frame_monsters.clear();

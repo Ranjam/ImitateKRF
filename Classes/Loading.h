@@ -17,6 +17,8 @@ public:
 	void loadingAssets();
 
 	void loadingAnimations();
+
+	Animation *createAnimation(std::string files_name, int start_index, int end_index, float delay);
 };
 
 #endif

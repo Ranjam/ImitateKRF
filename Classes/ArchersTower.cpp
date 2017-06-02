@@ -1,5 +1,5 @@
 #include "ArchersTower.h"
-
+#include "ArrowBullet.h"
 
 
 ArchersTower::ArchersTower():BaseTower(
@@ -25,7 +25,81 @@ bool ArchersTower::init() {
 
 	buildingAnimation();
 
+	schedule(schedule_selector(ArchersTower::attack1), 1.0f);
+
 	return true;
+}
+
+void ArchersTower::attack1(float dt) {
+
+	checkNearestMonster();
+
+	if (nearest_monster_ != nullptr) {
+
+		auto arrow = ArrowBullet::create();
+		this->addChild(arrow);
+
+		// get the tower(stronghold) and monster ralative vector
+		Vec2 relative_tower = nearest_monster_->getPosition() - this->getParent()->getPosition();
+
+		// init angle
+		float start_angle;
+		float end_angle;
+
+		Sprite *archer;
+		if (current_archer_ == 0) {
+			archer = archer_left_;
+		} else {
+			archer = archer_right_;
+		}
+
+		// left
+		if (relative_tower.x < 0) {
+			// init angle
+			Vec2 relative_archer = archer->convertToNodeSpace(nearest_monster_->getParent()->convertToWorldSpace(nearest_monster_->getPosition())).getNormalized();
+			float theta = CC_RADIANS_TO_DEGREES(atan(relative_archer.y / relative_archer.x));
+			theta = relative_archer.y > 0 ? 180 + theta : 180 - theta;
+			arrow->setRotation(theta);
+			// counter clock wise
+			end_angle = (theta - 15) > 90 ? theta - 15 : 90;
+
+			arrow->setPosition(archer->getPosition());
+			archer->setFlippedX(true);
+		}
+		// right
+		else {
+			// init angle
+			Vec2 relative_archer = archer->convertToNodeSpace(nearest_monster_->getParent()->convertToWorldSpace(nearest_monster_->getPosition())).getNormalized();
+			float theta = CC_RADIANS_TO_DEGREES(atan(relative_archer.y / relative_archer.x));
+			theta = relative_archer.y > 0 ? theta : -theta;
+			arrow->setRotation(theta);
+			// clock wise
+			end_angle = theta + 15 > 90 ? 90 : theta + 15;
+
+			arrow->setPosition(archer->getPosition());
+			archer->setFlippedX(false);
+		}
+		// if the monster on the up
+		if (relative_tower.y <= 0) {
+			archer->runAction(Animate::create(AnimationCache::getInstance()->getAnimation("archer_lv1_shoot_down")));
+		} else {
+			archer->runAction(Animate::create(AnimationCache::getInstance()->getAnimation("archer_lv1_shoot_up")));
+		}
+
+		// set the bezier
+		ccBezierConfig bezier;
+		// two control point
+		bezier.controlPoint_1 = Point(arrow->getPosition().x + relative_tower.x / 2, arrow->getPosition().y + 20);
+		bezier.controlPoint_2 = Point(relative_tower.x, relative_tower.y + 20);
+		bezier.endPosition = relative_tower;
+
+		auto action = Spawn::create(BezierTo::create(1.0f, bezier), RotateTo::create(1.0f, end_angle), NULL);
+		arrow->setBulletAnimation(action);
+		arrow->attack();
+
+		// change the archer
+		current_archer_ = current_archer_ == 0 ? 1 : 0;
+	}
 }
 
 // play building animation
@@ -73,15 +147,14 @@ void ArchersTower::initTower(int level) {
 
 	// set the tower base
 	this->tower_base_ = Sprite::createWithSpriteFrameName(StringUtils::format("archer_tower_000%d.png", level));
+	this->addChild(tower_base_);
 
 	// set the archer
 	this->archer_left_ = Sprite::createWithSpriteFrameName(StringUtils::format("tower_archer_lvl%d_shooter_0001.png", level));
-	archer_left_->setPosition(Vec2(tower_base_->getContentSize().width / 2 - 10, tower_base_->getContentSize().height / 2 + 18));
-	tower_base_->addChild(archer_left_);
+	archer_left_->setPosition(Vec2(-10.0f, 18.0f));
+	this->addChild(archer_left_);
 
 	this->archer_right_ = Sprite::createWithSpriteFrameName(StringUtils::format("tower_archer_lvl%d_shooter_0001.png", level));
-	archer_right_->setPosition(Vec2(tower_base_->getContentSize().width / 2 + 10, tower_base_->getContentSize().height / 2 + 18));
-	tower_base_->addChild(archer_right_);
-
-	this->addChild(tower_base_);
+	archer_right_->setPosition(Vec2(10.0f, 18.0f));
+	this->addChild(archer_right_);
 }

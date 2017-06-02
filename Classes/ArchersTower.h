@@ -13,6 +13,8 @@ public:
 	bool init() override;
 
 public:
+	void attack1(float dt);
+	void attack(){}
 	virtual void upgradeTower() {};
 	virtual void sellTower() {};
 	virtual void removeTower() {};
@@ -29,6 +31,7 @@ private:
 	Sprite *tower_base_ = nullptr;
 	Sprite *archer_left_ = nullptr;
 	Sprite *archer_right_ = nullptr;
+	int current_archer_ = 0;
 };
 
 #endif
