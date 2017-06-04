@@ -38,13 +38,10 @@ void ArchersTower::attack1(float dt) {
 
 		auto arrow = ArrowBullet::create();
 		this->addChild(arrow);
+		arrow->setVisible(false);
 
 		// get the tower(stronghold) and monster ralative vector
 		Vec2 relative_tower = nearest_monster_->getPosition() - this->getParent()->getPosition();
-
-		// init angle
-		float start_angle;
-		float end_angle;
 
 		Sprite *archer;
 		if (current_archer_ == 0) {
@@ -53,49 +50,58 @@ void ArchersTower::attack1(float dt) {
 			archer = archer_right_;
 		}
 
-		// left
-		if (relative_tower.x < 0) {
-			// init angle
-			Vec2 relative_archer = archer->convertToNodeSpace(nearest_monster_->getParent()->convertToWorldSpace(nearest_monster_->getPosition())).getNormalized();
-			float theta = CC_RADIANS_TO_DEGREES(atan(relative_archer.y / relative_archer.x));
-			theta = relative_archer.y > 0 ? 180 + theta : 180 - theta;
-			arrow->setRotation(theta);
-			// counter clock wise
-			end_angle = (theta - 15) > 90 ? theta - 15 : 90;
-
-			arrow->setPosition(archer->getPosition());
+		// if the monster on the left
+		if (relative_tower.x <= 0) {
 			archer->setFlippedX(true);
-		}
-		// right
-		else {
-			// init angle
-			Vec2 relative_archer = archer->convertToNodeSpace(nearest_monster_->getParent()->convertToWorldSpace(nearest_monster_->getPosition())).getNormalized();
-			float theta = CC_RADIANS_TO_DEGREES(atan(relative_archer.y / relative_archer.x));
-			theta = relative_archer.y > 0 ? theta : -theta;
-			arrow->setRotation(theta);
-			// clock wise
-			end_angle = theta + 15 > 90 ? 90 : theta + 15;
-
-			arrow->setPosition(archer->getPosition());
+		} else {
 			archer->setFlippedX(false);
 		}
+		arrow->setPosition(archer->getPosition());
+
 		// if the monster on the up
+		Animate *archer_animate;
 		if (relative_tower.y <= 0) {
-			archer->runAction(Animate::create(AnimationCache::getInstance()->getAnimation("archer_lv1_shoot_down")));
-		} else {
-			archer->runAction(Animate::create(AnimationCache::getInstance()->getAnimation("archer_lv1_shoot_up")));
+			archer_animate = Animate::create(AnimationCache::getInstance()->getAnimation("archer_lv1_shoot_down"));
+		}
+		else {
+			archer_animate = Animate::create(AnimationCache::getInstance()->getAnimation("archer_lv1_shoot_up"));
 		}
 
-		// set the bezier
-		ccBezierConfig bezier;
-		// two control point
-		bezier.controlPoint_1 = Point(arrow->getPosition().x + relative_tower.x / 2, arrow->getPosition().y + 20);
-		bezier.controlPoint_2 = Point(relative_tower.x, relative_tower.y + 20);
-		bezier.endPosition = relative_tower;
+		archer->runAction(Sequence::create(archer_animate,
+										   CallFunc::create([=]() 
+		{
+			arrow->setVisible(true);
+			arrow->shootBy(relative_tower, 150.0f, 0.8f, CallFunc::create([=]() {
+				if (nearest_monster_->getBoundingBox().intersectsRect(arrow->getBoundingBox())) {
 
-		auto action = Spawn::create(BezierTo::create(1.0f, bezier), RotateTo::create(1.0f, end_angle), NULL);
-		arrow->setBulletAnimation(action);
-		arrow->attack();
+				} else {
+					// if not hit
+					arrow->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("decal_arrow.png"));
+					arrow->runAction(Sequence::create(
+						DelayTime::create(1.0f),
+						FadeOut::create(0.3f),
+						CallFunc::create(CC_CALLBACK_0(ArrowBullet::removeFromParentAndCleanup, arrow, true)),
+						NULL)
+					);
+				}
+			}));
+		}),
+										   NULL));
+
+		// if you want shoot arrow at the same time with pull the bow
+		//arrow->shootBy(relative_tower, 150.0f, 0.8f, CallFunc::create([=]() {
+		//	if (nearest_monster_->getBoundingBox().intersectsRect(arrow->getBoundingBox())) {
+		//	} else {
+		//		// if not hit
+		//		arrow->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("decal_arrow.png"));
+		//		arrow->runAction(Sequence::create(
+		//			DelayTime::create(1.0f),
+		//			FadeOut::create(0.3f),
+		//			CallFunc::create(CC_CALLBACK_0(ArrowBullet::removeFromParentAndCleanup, arrow, true)),
+		//			NULL)
+		//		);
+		//	}
+		//}));
 
 		// change the archer
 		current_archer_ = current_archer_ == 0 ? 1 : 0;

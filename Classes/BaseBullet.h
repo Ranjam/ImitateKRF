@@ -16,9 +16,6 @@ protected:
 	// power
 	CC_SYNTHESIZE(float, power_, Power);  
 
-	// bullet animation
-	CC_SYNTHESIZE(Spawn*, bullet_animation_, BulletAnimation);
-
 public:
 	// attack
 	virtual void attack() = 0;

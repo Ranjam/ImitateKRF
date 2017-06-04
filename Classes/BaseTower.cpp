@@ -38,7 +38,7 @@ void BaseTower::checkNearestMonster() {
 	// 全局Vector变量，用来存储当前关卡的敌人  
 	auto monsters = GameManager::getInstance()->Monsters();
 	
-	nearest_monster_ = monsters.at(0);
+	nearest_monster_ = monsters.at(1);
 	//for (int i = 0; i < monsters.size(); i++) {
 	//	auto monster = monsters.at(i);
 	//	double distance = this->getParent()->getPosition().getDistance(monster->getPosition());
