@@ -41,12 +41,13 @@ bool BaseIcon::init() {
 	click_listener->onTouchEnded = [=](Touch *touch, Event *event) {
 		if (!selected_) {
 			// on clicked
-			confirm_->setVisible(true);
 			onClicked();
+			confirm_->setVisible(true);
 		} else {
 			// confirmed
-			confirm_->setVisible(false);
 			onConfirmed();
+			confirm_->setVisible(false);
+			this->_eventDispatcher->pauseEventListenersForTarget(this, true);
 		}
 		selected_ = !selected_;
 	};

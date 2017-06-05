@@ -40,7 +40,7 @@ void ArrowBullet::shootBy(Vec2 delta_vec, float height, float duration, CallFunc
 	ccBezierConfig bezier_config;
 	bezier_config.controlPoint_1 = bezier_config.controlPoint_2 = mid_point;
 	bezier_config.endPosition = delta_vec;
-
+	   
 	// set the start angle and end angle
 	float start_angle;
 	if (fabs(delta_vec.x - 0) > 0.000001) {
