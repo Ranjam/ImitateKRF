@@ -52,11 +52,12 @@ private:
 	CC_SYNTHESIZE(Monster *, nearest_monster_, NearestMonster);
 
 public:
-	virtual void attack() = 0;
+	virtual void attack(float dt) = 0;
 	virtual void upgradeTower() = 0; 
 	virtual void sellTower() = 0;
 	virtual void removeTower() = 0;
 	virtual void showTowerInfo() = 0; 
+	virtual void hideTowerInfo() = 0;
 	virtual void upgradeOne() = 0;
 	virtual void upgradeTwo() = 0;
 	virtual void setRallyPoint(Vec2 pos) = 0;

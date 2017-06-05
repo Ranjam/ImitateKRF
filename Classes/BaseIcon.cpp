@@ -32,6 +32,7 @@ bool BaseIcon::init() {
 		if (this->getBoundingBox().containsPoint(this->getParent()->convertTouchToNodeSpace(touch))) {
 			return true;
 		} else {
+			onCanceled();
 			confirm_->setVisible(false);
 			selected_ = false;
 		}

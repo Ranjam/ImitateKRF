@@ -14,9 +14,12 @@ public:
 
 	bool init() override;
 
+	virtual void onClicked() { }
+
+	virtual void onCanceled() { }
+
 	virtual void onConfirmed() { }
 
-	virtual void onClicked() { }
 
 protected:
 	Sprite *image_;

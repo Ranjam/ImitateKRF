@@ -49,8 +49,13 @@ public:
 
 	// µ±Ç°×´Ì¬
 	CC_SYNTHESIZE(MonsterState, state_, State);
+
 public:
 	virtual void keepGoing() = 0;
+
+	Sprite *getImage() const {
+		return image_;
+	}
 
 protected:
 	Sprite *image_;

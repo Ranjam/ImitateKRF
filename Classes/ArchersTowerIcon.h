@@ -14,9 +14,12 @@ public:
 
 	bool init() override;
 
+	void onClicked() override;
+
+	void onCanceled() override;
+
 	void onConfirmed() override;
 
-	void onClicked() override;
 };
 
 #endif

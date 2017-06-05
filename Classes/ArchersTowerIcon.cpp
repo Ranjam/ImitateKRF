@@ -1,6 +1,7 @@
 #include "ArchersTowerIcon.h"
 #include "Stronghold.h"
 #include "ArchersTower.h"
+#include "RangeCircle.h"
 
 
 ArchersTowerIcon::ArchersTowerIcon() {
@@ -25,8 +26,14 @@ void ArchersTowerIcon::onConfirmed() {
 	static_cast<RingPanel *>(this->getParent())->hide();
 	static_cast<Stronghold *>(this->getParent()->getParent())->hidePreview();
 	static_cast<Stronghold *>(this->getParent()->getParent())->buildTower(BaseTower::TowerType::ARCHER);
+	static_cast<Stronghold *>(this->getParent()->getParent())->removeChildByTag(999, true);
 }
 
 void ArchersTowerIcon::onClicked() {
 	static_cast<Stronghold *>(this->getParent()->getParent())->showPreview(BaseTower::ARCHER);
+	static_cast<Stronghold *>(this->getParent()->getParent())->addChild(RangeCircle::create(RangeCircle::RANGE, ArchersTower::kArcherTowerLv1Scope), -1, 999);
+}
+
+void ArchersTowerIcon::onCanceled() {
+	static_cast<Stronghold *>(this->getParent()->getParent())->removeChildByTag(999, true);
 }

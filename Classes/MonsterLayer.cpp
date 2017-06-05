@@ -69,7 +69,7 @@ void MonsterLayer::loadMonstersData() {
 				auto type = monster.at("type").asInt();
 				auto path = monster.at("path").asInt();
 				auto road = monster.at("road").asInt();
-				auto monster_temp = generateMonster(type, path, road);
+				Monster *monster_temp = generateMonster(type, path, road);
 				frame_monsters.pushBack(monster_temp);
 				GameManager::getInstance()->Monsters().pushBack(monster_temp);
 			}

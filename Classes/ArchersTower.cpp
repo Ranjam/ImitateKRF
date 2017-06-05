@@ -1,18 +1,23 @@
 #include "ArchersTower.h"
 #include "ArrowBullet.h"
+#include "Stronghold.h"
+#include "RangeCircle.h"
 
+const float ArchersTower::kArcherTowerLv1Scope = 150.0f;
+const float ArchersTower::kArcherTowerLv2Scope = 200.0f;
+const float ArchersTower::kArcherTowerLv3Scope = 250.0f;
 
 ArchersTower::ArchersTower():BaseTower(
-	TowerType::ARCHER,
-	"",
-	1,
-	20.0f,
-	25.0f,
-	3.0f,
-	5.0f,
-	20,
-	10,
-	nullptr
+	TowerType::ARCHER,  // type
+	"",	// name
+	1, // level
+	kArcherTowerLv1Scope, // scope
+	kArcherTowerLv2Scope, // next scope
+	1.0f, // rate
+	5.0f, // power
+	20, // upgrade price
+	10, // selling price
+	nullptr // target monster
 ) { }
 
 ArchersTower::~ArchersTower() {
@@ -25,23 +30,23 @@ bool ArchersTower::init() {
 
 	buildingAnimation();
 
-	schedule(schedule_selector(ArchersTower::attack1), 1.0f);
+	schedule(schedule_selector(ArchersTower::attack), this->rate_);
 
 	return true;
 }
 
-void ArchersTower::attack1(float dt) {
+void ArchersTower::attack(float dt) {
 
 	checkNearestMonster();
 
 	if (nearest_monster_ != nullptr) {
-
+		Monster *target_monster = this->nearest_monster_;
 		auto arrow = ArrowBullet::create();
 		this->addChild(arrow);
 		arrow->setVisible(false);
 
 		// get the tower(stronghold) and monster ralative vector
-		Vec2 relative_tower = nearest_monster_->getPosition() - this->getParent()->getPosition();
+		Vec2 relative_tower = target_monster->getPosition() - this->getParent()->getPosition();
 
 		Sprite *archer;
 		if (current_archer_ == 0) {
@@ -49,6 +54,9 @@ void ArchersTower::attack1(float dt) {
 		} else {
 			archer = archer_right_;
 		}
+
+		// monster relative to the archer
+		Vec2 relative_archer = this->convertToNodeSpace(target_monster->getParent()->convertToWorldSpace(target_monster->getPosition())) - archer->getPosition();
 
 		// if the monster on the left
 		if (relative_tower.x <= 0) {
@@ -71,9 +79,17 @@ void ArchersTower::attack1(float dt) {
 										   CallFunc::create([=]() 
 		{
 			arrow->setVisible(true);
-			arrow->shootBy(relative_tower, 150.0f, 0.8f, CallFunc::create([=]() {
-				if (nearest_monster_->getBoundingBox().intersectsRect(arrow->getBoundingBox())) {
-
+			arrow->shootBy(relative_archer, 150.0f, 0.5f, CallFunc::create([=]() {
+				if (target_monster != nullptr) {
+					// if arrow hit monster
+					Vec2 world_arrow_origin = target_monster->convertToNodeSpace(arrow->getParent()->convertToWorldSpace(arrow->getPosition()));
+					Rect arrow_rect = Rect(world_arrow_origin.x, 
+										   world_arrow_origin.y,
+										   arrow->getContentSize().width,
+										   arrow->getContentSize().height);
+					if (target_monster->getImage()->getBoundingBox().intersectsRect(arrow_rect)) {
+						log("hit!!!");
+					}
 				} else {
 					// if not hit
 					arrow->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("decal_arrow.png"));
@@ -105,6 +121,20 @@ void ArchersTower::attack1(float dt) {
 
 		// change the archer
 		current_archer_ = current_archer_ == 0 ? 1 : 0;
+	}
+}
+
+void ArchersTower::showTowerInfo() {
+	if (!info_is_shown) {
+		static_cast<Stronghold *>(this->getParent())->addChild(RangeCircle::create(RangeCircle::RANGE, ArchersTower::kArcherTowerLv1Scope), -1, 999);
+		info_is_shown = true;
+	}
+}
+
+void ArchersTower::hideTowerInfo() {
+	if (info_is_shown) {
+		static_cast<Stronghold *>(this->getParent())->removeChildByTag(999, true);
+		info_is_shown = false;
 	}
 }
 
@@ -163,4 +193,23 @@ void ArchersTower::initTower(int level) {
 	this->archer_right_ = Sprite::createWithSpriteFrameName(StringUtils::format("tower_archer_lvl%d_shooter_0001.png", level));
 	archer_right_->setPosition(Vec2(10.0f, 18.0f));
 	this->addChild(archer_right_);
+
+	// add listener
+	this->addTouchListener();
+}
+
+void ArchersTower::addTouchListener() {
+	auto touch_listener = EventListenerTouchOneByOne::create();
+
+	touch_listener->onTouchBegan = [=](Touch *touch, Event *event)->bool {
+		if (this->tower_base_->getBoundingBox().containsPoint(this->convertTouchToNodeSpace(touch))) {
+			this->showTowerInfo();
+			return true;
+		} else {
+			this->hideTowerInfo();
+			return false;
+		}
+	};
+
+	this->_eventDispatcher->addEventListenerWithSceneGraphPriority(touch_listener, this->tower_base_);
 }
