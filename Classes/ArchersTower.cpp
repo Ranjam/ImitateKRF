@@ -14,7 +14,7 @@ ArchersTower::ArchersTower():BaseTower(
 	kArcherTowerLv1Scope, // scope
 	kArcherTowerLv2Scope, // next scope
 	1.0f, // rate
-	5.0f, // power
+	20.0f, // power
 	20, // upgrade price
 	10, // selling price
 	nullptr // target monster
@@ -78,28 +78,30 @@ void ArchersTower::attack(float dt) {
 		archer->runAction(Sequence::create(archer_animate,
 										   CallFunc::create([=]() 
 		{
+
 			arrow->setVisible(true);
 			arrow->shootBy(relative_archer, 150.0f, 0.5f, CallFunc::create([=]() {
 				if (target_monster != nullptr) {
 					// if arrow hit monster
 					Vec2 world_arrow_origin = target_monster->convertToNodeSpace(arrow->getParent()->convertToWorldSpace(arrow->getPosition()));
-					Rect arrow_rect = Rect(world_arrow_origin.x, 
+					Rect arrow_rect = Rect(world_arrow_origin.x,
 										   world_arrow_origin.y,
 										   arrow->getContentSize().width,
 										   arrow->getContentSize().height);
 					if (target_monster->getImage()->getBoundingBox().intersectsRect(arrow_rect)) {
-						log("hit!!!");
+						target_monster->getDamage(this->power_);
+						arrow->removeFromParentAndCleanup(true);
+						return;
 					}
-				} else {
-					// if not hit
-					arrow->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("decal_arrow.png"));
-					arrow->runAction(Sequence::create(
-						DelayTime::create(1.0f),
-						FadeOut::create(0.3f),
-						CallFunc::create(CC_CALLBACK_0(ArrowBullet::removeFromParentAndCleanup, arrow, true)),
-						NULL)
-					);
 				}
+				// if not hit
+				arrow->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("decal_arrow.png"));
+				arrow->runAction(Sequence::create(
+					DelayTime::create(1.0f),
+					FadeOut::create(0.3f),
+					CallFunc::create(CC_CALLBACK_0(ArrowBullet::removeFromParentAndCleanup, arrow, true)),
+					NULL)
+				);
 			}));
 		}),
 										   NULL));
@@ -126,14 +128,14 @@ void ArchersTower::attack(float dt) {
 
 void ArchersTower::showTowerInfo() {
 	if (!info_is_shown) {
-		static_cast<Stronghold *>(this->getParent())->addChild(RangeCircle::create(RangeCircle::RANGE, ArchersTower::kArcherTowerLv1Scope), -1, 999);
+		static_cast<Stronghold *>(this->getParent())->addRangeCircle(RangeCircle::RANGE, ArchersTower::kArcherTowerLv1Scope);
 		info_is_shown = true;
 	}
 }
 
 void ArchersTower::hideTowerInfo() {
 	if (info_is_shown) {
-		static_cast<Stronghold *>(this->getParent())->removeChildByTag(999, true);
+		static_cast<Stronghold *>(this->getParent())->removeRangeCircle();
 		info_is_shown = false;
 	}
 }

@@ -104,13 +104,13 @@ Monster* MonsterLayer::generateMonster(int type, int path, int road) {
 	switch (type) {
 	case 0:
 	{
-		Monster *monster = DesertThug::create(0, 0, monster_paths_.at(road).at(path));
+		Monster *monster = DesertThug::create(type, 0, monster_paths_.at(road).at(path));
 		//monster->retain();
 		return monster;
 	}
 	default:
 	{
-		Monster *monster = DesertThug::create(0, 0, monster_paths_.at(0).at(0));
+		Monster *monster = DesertThug::create(type, 0, monster_paths_.at(0).at(0));
 		//monster->retain();
 		return monster;
 	}

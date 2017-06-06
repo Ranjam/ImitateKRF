@@ -26,14 +26,14 @@ void ArchersTowerIcon::onConfirmed() {
 	static_cast<RingPanel *>(this->getParent())->hide();
 	static_cast<Stronghold *>(this->getParent()->getParent())->hidePreview();
 	static_cast<Stronghold *>(this->getParent()->getParent())->buildTower(BaseTower::TowerType::ARCHER);
-	static_cast<Stronghold *>(this->getParent()->getParent())->removeChildByTag(999, true);
+	static_cast<Stronghold *>(this->getParent()->getParent())->removeRangeCircle();
 }
 
 void ArchersTowerIcon::onClicked() {
 	static_cast<Stronghold *>(this->getParent()->getParent())->showPreview(BaseTower::ARCHER);
-	static_cast<Stronghold *>(this->getParent()->getParent())->addChild(RangeCircle::create(RangeCircle::RANGE, ArchersTower::kArcherTowerLv1Scope), -1, 999);
+	static_cast<Stronghold *>(this->getParent()->getParent())->addRangeCircle(RangeCircle::RANGE, ArchersTower::kArcherTowerLv1Scope);
 }
 
 void ArchersTowerIcon::onCanceled() {
-	static_cast<Stronghold *>(this->getParent()->getParent())->removeChildByTag(999, true);
+	static_cast<Stronghold *>(this->getParent()->getParent())->removeRangeCircle();
 }

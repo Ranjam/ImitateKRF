@@ -12,7 +12,7 @@ bool DesertThug::init(int type, int road, const std::vector<Vec2> &path) {
 	}
 
 	image_ = Sprite::createWithSpriteFrameName("desertThug_0067.png");
-	this->addChild(image_, 0);
+	this->addChild(image_, -1);
 	
 	hp_bg_ = Sprite::createWithSpriteFrameName("lifebar_bg_small.png");
 	hp_bg_->setPosition(0.0f, 20.0f);
@@ -21,10 +21,13 @@ bool DesertThug::init(int type, int road, const std::vector<Vec2> &path) {
 	hp_prog_ = ProgressTimer::create(Sprite::createWithSpriteFrameName("lifebar_small.png"));
 	hp_prog_->setType(ProgressTimer::Type::BAR);
 	hp_prog_->setMidpoint(Vec2(0.0f, 0.5f));
-	hp_prog_->setScaleY(2.0f);
+	hp_prog_->setScaleY(1.5f);
 	hp_prog_->setPercentage(100.0f);
 	hp_prog_->setPosition(0.0f, 20.0f);
 	this->addChild(hp_prog_, 1);
+
+	this->setHP(100);
+	this->setMaxHP(100);
 
 	return true;
 }

@@ -36,7 +36,7 @@ public:
 	virtual bool init(int type, int road, const std::vector<Vec2> &path);
 
 	// 怪物类型
-	// CC_SYNTHESIZE(int, type_, Type);
+	 CC_SYNTHESIZE(int, type_, Type);
 
 	// 出口  
 	// CC_SYNTHESIZE(int, road_, Road);
@@ -45,13 +45,18 @@ public:
 	// CC_SYNTHESIZE(int, path_, Path);
 
 	// 血量
-	CC_SYNTHESIZE(int, hp_, HP);
+	CC_SYNTHESIZE(float, hp_, HP);
+
+	// 最高血量
+	CC_SYNTHESIZE(float, max_hp_, MaxHP);
 
 	// 当前状态
 	CC_SYNTHESIZE(MonsterState, state_, State);
 
 public:
 	virtual void keepGoing() = 0;
+
+	virtual void getDamage(float damage);
 
 	Sprite *getImage() const {
 		return image_;

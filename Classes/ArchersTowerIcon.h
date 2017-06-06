@@ -2,6 +2,7 @@
 #define ARCHERS_TOWER_ICON_H
 
 #include "BaseIcon.h"
+#include "Stronghold.h"
 
 USING_NS_CC;
 
@@ -19,7 +20,6 @@ public:
 	void onCanceled() override;
 
 	void onConfirmed() override;
-
 };
 
 #endif
