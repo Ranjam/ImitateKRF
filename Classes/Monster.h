@@ -33,16 +33,10 @@ public:
 	//	return nullptr;
 	//}
 
-	virtual bool init(int type, int road, const std::vector<Vec2> &path);
+	virtual bool init(int type, const std::vector<Vec2> &path);
 
 	// 怪物类型
-	 CC_SYNTHESIZE(int, type_, Type);
-
-	// 出口  
-	// CC_SYNTHESIZE(int, road_, Road);
-
-	// 路线
-	// CC_SYNTHESIZE(int, path_, Path);
+	CC_SYNTHESIZE(int, type_, Type);
 
 	// 血量
 	CC_SYNTHESIZE(float, hp_, HP);
@@ -53,10 +47,15 @@ public:
 	// 当前状态
 	CC_SYNTHESIZE(MonsterState, state_, State);
 
+	// is dead
+	CC_SYNTHESIZE(bool, is_dead_, IsDead);
+
 public:
 	virtual void keepGoing() = 0;
 
 	virtual void getDamage(float damage);
+
+	virtual void dying() = 0;
 
 	Sprite *getImage() const {
 		return image_;

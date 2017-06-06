@@ -6,8 +6,8 @@ DesertThug::DesertThug() {
 DesertThug::~DesertThug() {
 }
 
-bool DesertThug::init(int type, int road, const std::vector<Vec2> &path) {
-	if (!Monster::init(type, road, path)) {
+bool DesertThug::init(int type, const std::vector<Vec2> &path) {
+	if (!Monster::init(type, path)) {
 		return false;
 	}
 
@@ -89,12 +89,12 @@ void DesertThug::setState(MonsterState state) {
 }
 
 void DesertThug::keepGoing() {
-	//static int current_point_ = 1; // there can't use static
+	//static int current_target_point_ = 1; // there can't use static
 
-	if (current_point_ < path_.size() && this->getPosition() != path_[current_point_]) {
+	if (current_target_point_ < path_.size() && this->getPosition() != path_[current_target_point_]) {
 
-		float dx = path_[current_point_].x * 1.08 - this->getPosition().x;
-		float dy = path_[current_point_].y * 1.25 - this->getPosition().y;
+		float dx = path_[current_target_point_].x - this->getPosition().x;
+		float dy = path_[current_target_point_].y - this->getPosition().y;
 		
 		if (fabs(dy) > fabs(dx) && dy > 0) {
 			// up
@@ -109,8 +109,13 @@ void DesertThug::keepGoing() {
 			// right
 			setState(MonsterState::WALK_RIGHT);
 		}
-		//this->runAction(Sequence::create(MoveTo::create(path_[i].distance(this->getPosition()) / 13.0f, path_[i]), CallFunc::create(CC_CALLBACK_0(DesertThug::keepGoing, this)), NULL));
-		this->runAction(Sequence::create(MoveTo::create(0.3f, Vec2(path_[current_point_].x * 1.08, path_[current_point_].y * 1.25)), CallFunc::create(CC_CALLBACK_0(DesertThug::keepGoing, this)), NULL));
-		++current_point_;
+
+		float distance = this->path_[current_target_point_].getDistance(this->path_[current_target_point_ - 1]);
+		this->runAction(Sequence::create(MoveTo::create(distance / this->speed_, Vec2(path_[current_target_point_].x, path_[current_target_point_].y)), CallFunc::create(CC_CALLBACK_0(DesertThug::keepGoing, this)), NULL));
+		++current_target_point_;
 	}
+}
+
+void DesertThug::dying() {
+	this->runAction(Sequence::create(DelayTime::create(3.5f), CallFunc::create(CC_CALLBACK_0(DesertThug::removeFromParent, this)), NULL));
 }

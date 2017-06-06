@@ -8,9 +8,9 @@ public:
 	DesertThug();
 	~DesertThug();
 
-	static DesertThug* create(int type, int road, const std::vector<Vec2> &path) {
+	static DesertThug* create(int type, const std::vector<Vec2> &path) {
 		DesertThug *pRet = new(std::nothrow) DesertThug(); 
-		if (pRet && pRet->init(type, road, path)) {
+		if (pRet && pRet->init(type, path)) {
 			pRet->autorelease(); 
 			return pRet;
 		}
@@ -19,7 +19,7 @@ public:
 		return nullptr;
 	}
 
-	bool init(int type, int road, const std::vector<Vec2> &path) override;
+	bool init(int type, const std::vector<Vec2> &path) override;
 
 	void update(float dt) override;
 
@@ -27,8 +27,11 @@ public:
 
 	void keepGoing() override;
 
+	void dying() override;
+
 private:
-	int current_point_ = 1; // current point
+	int current_target_point_ = 1; // current point
+	float speed_ = 25.0f;
 };
 
 #endif

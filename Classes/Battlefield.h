@@ -4,6 +4,7 @@
 #include "cocos2d.h"
 #include "BaseMap.h"
 #include "MonsterLayer.h"
+#include "WarningFlag.h"
 
 USING_NS_CC;
 
@@ -34,7 +35,7 @@ private:
 	MonsterLayer *monster_layer_;
 
 	// wave flags
-	Vector<WarningFlag *> warning_flags_;
+	WarningFlag *warning_flags_;
 };
 
 #endif

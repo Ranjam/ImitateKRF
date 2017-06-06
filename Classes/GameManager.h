@@ -13,19 +13,26 @@ public:
 		return &instance;
 	}
 
-	Vector<Monster *> &Monsters() {
-		// todo: load all monsters
+	std::list<Monster *> &Monsters() {
 		return monsters_;
 	}
-
 private:
-	Vector<Monster *> monsters_;
+	//void loadPathData();
+
+	//void loadMonstersData();
 
 private:
 	GameManager();
 	GameManager(const GameManager &) = delete;
 	GameManager &operator=(const GameManager &) = delete;
 	~GameManager();
+
+	CC_SYNTHESIZE(int, gold_, Gold);
+	CC_SYNTHESIZE(int, life_, Life);
+	CC_SYNTHESIZE(int, wave_count_, WaveCount);
+
+private:
+	std::list<Monster *> monsters_;
 };
 
 #endif

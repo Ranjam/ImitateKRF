@@ -78,7 +78,6 @@ void ArchersTower::attack(float dt) {
 		archer->runAction(Sequence::create(archer_animate,
 										   CallFunc::create([=]() 
 		{
-
 			arrow->setVisible(true);
 			arrow->shootBy(relative_archer, 150.0f, 0.5f, CallFunc::create([=]() {
 				if (target_monster != nullptr) {
