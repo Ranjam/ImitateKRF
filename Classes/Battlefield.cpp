@@ -56,7 +56,7 @@ bool Battlefield::init(int level) {
 		this->setPosition(targetPostion);
 	};
 
-#if 1
+#if 0
 	// debug to decide point
 	touch_move_listener->onTouchEnded = [=](Touch *touch, Event *event) {
 		auto point = this->monster_layer_->convertTouchToNodeSpace(touch);

@@ -38,17 +38,21 @@ void BaseTower::checkNearestMonster() {
 
 	double distance = 0.0f;
 
-	if (this->nearest_monster_ != nullptr && !this->nearest_monster_->getIsDead()) {
+	if (this->nearest_monster_ != nullptr) {
+		// if monster is dead or monster beyond attack scope, release the handle
 		distance = this->getParent()->getPosition().getDistance(this->nearest_monster_->getPosition());
-		if (distance > this->scope_) {
+		if (this->nearest_monster_->getIsDead() || distance > this->scope_) {
+			this->nearest_monster_->release();
 			this->nearest_monster_ = nullptr;
 		}
-	} else {
-		for (auto monster : GameManager::getInstance()->Monsters()) {
+	}
+	if (this->nearest_monster_ == nullptr) {
+		for (auto monster : GameManager::getInstance()->getMonsters()) {
 			distance = this->getParent()->getPosition().getDistance(monster->getPosition());
-			// 当在塔的范围内，且怪物可以被攻击（某些地下怪物只有钻出地面可以被攻击）
+			// if monster can be attack, handle it
 			if (distance < this->scope_) {
 				this->nearest_monster_ = monster;
+				this->nearest_monster_->retain();
 				break;
 			}
 		}

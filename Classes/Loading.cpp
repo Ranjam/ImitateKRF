@@ -53,7 +53,7 @@ void Loading::loadingAnimations() {
 
 	// desert thug died
 	AnimationCache::getInstance()->addAnimation(createAnimation("desertThug_0%03d.png", 101, 106, 0.05f),
-												"desert_thug_died");
+												"desert_thug_dead");
 
 	// desert thug stand
 	AnimationCache::getInstance()->addAnimation(createAnimation("desertThug_0067.png", 67, 67, 0.05f),

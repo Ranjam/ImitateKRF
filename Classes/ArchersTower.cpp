@@ -2,6 +2,7 @@
 #include "ArrowBullet.h"
 #include "Stronghold.h"
 #include "RangeCircle.h"
+#include "GameManager.h"
 
 const float ArchersTower::kArcherTowerLv1Scope = 150.0f;
 const float ArchersTower::kArcherTowerLv2Scope = 200.0f;
@@ -14,7 +15,7 @@ ArchersTower::ArchersTower():BaseTower(
 	kArcherTowerLv1Scope, // scope
 	kArcherTowerLv2Scope, // next scope
 	1.0f, // rate
-	20.0f, // power
+	50.0f, // power
 	20, // upgrade price
 	10, // selling price
 	nullptr // target monster
@@ -80,15 +81,15 @@ void ArchersTower::attack(float dt) {
 		{
 			arrow->setVisible(true);
 			arrow->shootBy(relative_archer, 150.0f, 0.5f, CallFunc::create([=]() {
-				if (target_monster != nullptr) {
-					// if arrow hit monster
-					Vec2 world_arrow_origin = target_monster->convertToNodeSpace(arrow->getParent()->convertToWorldSpace(arrow->getPosition()));
+				for (auto monster : GameManager::getInstance()->getMonsters()) {
+					Vec2 world_arrow_origin = monster->convertToNodeSpace(arrow->getParent()->convertToWorldSpace(arrow->getPosition()));
 					Rect arrow_rect = Rect(world_arrow_origin.x,
 										   world_arrow_origin.y,
 										   arrow->getContentSize().width,
 										   arrow->getContentSize().height);
-					if (target_monster->getImage()->getBoundingBox().intersectsRect(arrow_rect)) {
-						target_monster->getDamage(this->power_);
+					// if arrow hit monster
+					if (monster->getImage()->getBoundingBox().intersectsRect(arrow_rect)) {
+						monster->getDamage(this->power_);
 						arrow->removeFromParentAndCleanup(true);
 						return;
 					}

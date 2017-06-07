@@ -1,4 +1,5 @@
 #include "Monster.h"
+#include "GameManager.h"
 
 Monster::Monster() { }
 
@@ -21,6 +22,7 @@ void Monster::getDamage(float damage) {
 	this->hp_prog_->setPercentage(this->hp_ / this->max_hp_ * 100);
 	if (this->hp_ < 0.0f) {
 		this->is_dead_ = true;
+		GameManager::getInstance()->getMonsters().eraseObject(this);
 		this->dying();
 	}
 }

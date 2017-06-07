@@ -85,7 +85,7 @@ void MonsterLayer::monsterIncoming(float dt) {
 		auto monster = generateMonster(monster_info.type, monster_info.path);
 		this->addChild(monster);
 		monster->keepGoing();
-		GameManager::getInstance()->Monsters().push_back(monster);
+		GameManager::getInstance()->getMonsters().pushBack(monster);
 		++current_monster_;
 	} else {
 		unschedule(schedule_selector(MonsterLayer::monsterIncoming));

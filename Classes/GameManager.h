@@ -13,7 +13,7 @@ public:
 		return &instance;
 	}
 
-	std::list<Monster *> &Monsters() {
+	Vector<Monster *> &getMonsters() {
 		return monsters_;
 	}
 private:
@@ -32,7 +32,7 @@ private:
 	CC_SYNTHESIZE(int, wave_count_, WaveCount);
 
 private:
-	std::list<Monster *> monsters_;
+	Vector<Monster *> monsters_;
 };
 
 #endif
