@@ -1,6 +1,7 @@
 #include "Battlefield.h"
 #include "Common.h"
 #include "Stronghold.h"
+#include "GameManager.h"
 
 Battlefield::Battlefield() {
 }
@@ -37,9 +38,12 @@ bool Battlefield::init(int level) {
 	warning_flags_ = flag;
 
 	// stronghold
-	auto hold = Stronghold::create();
-	hold->setPosition(winSize.width / 2 + 200, winSize.height / 2 + 180);
-	this->addChild(hold, 1);
+	//auto hold = Stronghold::create();
+	//hold->setPosition(winSize.width / 2 + 200, winSize.height / 2 + 180);
+	//this->addChild(hold, 1);
+
+	// load level data
+	loadLevelData();
 
 	// on moved
 	auto touch_move_listener = EventListenerTouchOneByOne::create();
@@ -65,7 +69,7 @@ bool Battlefield::init(int level) {
 			"<string>%g</string>"
 			"<key>y</key>"
 			"<string>%g</string>"
-			"</dict>", 
+			"</dict>",
 			point.x, point.y);
 	};
 #endif
@@ -91,5 +95,51 @@ void Battlefield::updateFlag(float dt) {
 		warning_flags_->start();
 		unschedule(schedule_selector(Battlefield::updateFlag));
 		schedule(schedule_selector(Battlefield::updateWave));
+	}
+}
+
+void Battlefield::loadLevelData() {
+	// all level data
+	auto data_map = FileUtils::getInstance()->getValueMapFromFile("level_01_info.plist");
+
+	// level base data
+	auto level_data = data_map.at("level_data").asValueMap();
+	GameManager::getInstance()->setGold(level_data.at("gold").asInt());
+	GameManager::getInstance()->setLife(level_data.at("life").asInt());
+	GameManager::getInstance()->setWaveCount(level_data.at("wave_count").asInt());
+
+	// stronghold
+	auto level_stronghold = data_map.at("stronghold").asValueVector();
+	for (size_t i = 0; i < level_stronghold.size(); ++i) {
+		auto stronghold_info = level_stronghold.at(i).asValueMap();
+		auto hold = Stronghold::create();
+		hold->setPosition(stronghold_info.at("x").asFloat(), stronghold_info.at("y").asFloat());
+		this->addChild(hold, 1);
+	}
+
+	// level monsters
+	auto level_monsters = data_map.at("monsters").asValueVector();
+	for (size_t i = 0; i < level_monsters.size(); ++i) {
+		// for every wave
+		auto wave_monsters = level_monsters.at(i).asValueVector();
+		std::vector<MonsterLayer::MonsterInfo> monster_infos;
+		for (size_t j = 0; j < wave_monsters.size(); ++j) {
+			monster_infos.push_back({ wave_monsters.at(j).asValueMap().at("type").asInt(),
+									wave_monsters.at(j).asValueMap().at("path").asInt() });
+		}
+		this->monster_layer_->getMonsterInfo().push_back(monster_infos);
+	}
+
+	// level paths
+	auto level_paths = data_map.at("paths").asValueVector();
+	for (size_t i = 0; i < level_paths.size(); ++i) {
+		// for every path
+		auto paths = level_paths.at(i).asValueVector();
+		std::vector<Vec2> path;
+		for (size_t j = 0; j < paths.size(); ++j) {
+			auto point = paths.at(j).asValueMap();
+			path.push_back(Vec2(point.at("x").asFloat(), point.at("y").asFloat()));
+		}
+		this->monster_layer_->getPaths().push_back(path);
 	}
 }

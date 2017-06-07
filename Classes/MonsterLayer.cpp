@@ -17,8 +17,6 @@ bool MonsterLayer::init() {
 		return false;
 	}
 
-	loadLevelData();
-
 	return true;
 }
 
@@ -26,43 +24,6 @@ void MonsterLayer::nextWave() {
 	if (wave_over_ && current_wave_ < monster_info_.size()) {
 		schedule(schedule_selector(MonsterLayer::monsterIncoming), 1.0f);
 		wave_over_ = false;
-	}
-}
-
-void MonsterLayer::loadLevelData() {
-	// all level data
-	auto data_map = FileUtils::getInstance()->getValueMapFromFile("test.plist");
-
-	// level base data
-	auto level_data = data_map.at("level_data").asValueMap();
-	GameManager::getInstance()->setGold(level_data.at("gold").asInt());
-	GameManager::getInstance()->setLife(level_data.at("life").asInt());
-	GameManager::getInstance()->setWaveCount(level_data.at("wave_count").asInt());
-
-	// level monsters
-	auto level_monsters = data_map.at("monsters").asValueVector();
-	for (int i = 0; i < level_monsters.size(); ++i) {
-		// for every wave
-		auto wave_monsters = level_monsters.at(i).asValueVector();
-		std::vector<MonsterInfo> monster_infos;
-		for (int j = 0; j < wave_monsters.size(); ++j) {
-			monster_infos.push_back({ wave_monsters.at(j).asValueMap().at("type").asInt(),
-									  wave_monsters.at(j).asValueMap().at("path").asInt() });
-		}
-		this->monster_info_.push_back(monster_infos);
-	}
-
-	// level paths
-	auto level_paths = data_map.at("paths").asValueVector();
-	for (int i = 0; i < level_paths.size(); ++i) {
-		// for every path
-		auto paths = level_paths.at(i).asValueVector();
-		std::vector<Vec2> path;
-		for (int j = 0; j < paths.size(); ++j) {
-			auto point = paths.at(j).asValueMap();
-			path.push_back(Vec2(point.at("x").asFloat(), point.at("y").asFloat()));
-		}
-		this->paths_.push_back(path);
 	}
 }
 

@@ -30,6 +30,8 @@ public:
 
 	void updateFlag(float dt);
 
+	void loadLevelData();
+
 private:
 	BaseMap *map_;
 	MonsterLayer *monster_layer_;

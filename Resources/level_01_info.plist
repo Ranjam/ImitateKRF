@@ -15,6 +15,57 @@
             <key>wave_count</key>
             <string>3</string>
         </dict>
+        <key>stronghold</key>
+        <array>
+            <dict>
+                <key>type</key>
+                <string>0</string>
+                <key>x</key>
+                <string>670.957</string>
+                <key>y</key>
+                <string>501.701</string>
+            </dict>
+            <dict>
+                <key>type</key>
+                <string>0</string>
+                <key>x</key>
+                <string>446.326</string>
+                <key>y</key>
+                <string>498.705</string>
+            </dict>
+            <dict>
+                <key>type</key>
+                <string>0</string>
+                <key>x</key>
+                <string>239.396</string>
+                <key>y</key>
+                <string>580.571</string>
+            </dict>
+            <dict>
+                <key>type</key>
+                <string>0</string>
+                <key>x</key>
+                <string>505.23</string>
+                <key>y</key>
+                <string>233.143</string>
+            </dict>
+            <dict>
+                <key>type</key>
+                <string>0</string>
+                <key>x</key>
+                <string>577.111</string>
+                <key>y</key>
+                <string>734.318</string>
+            </dict>
+            <dict>
+                <key>type</key>
+                <string>0</string>
+                <key>x</key>
+                <string>895.588</string>
+                <key>y</key>
+                <string>396.873</string>
+            </dict>
+        </array>
         <!-- 怪物数据，每一个array代表一波，每一个dict代表一个 -->
         <key>monsters</key>
         <array>
