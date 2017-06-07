@@ -19,8 +19,8 @@ bool Monster::init(int type, const std::vector<Vec2> &path) {
 
 void Monster::getDamage(float damage) {
 	this->hp_ -= damage;
-	this->hp_prog_->setPercentage(this->hp_ / this->max_hp_ * 100);
-	if (this->hp_ < 0.0f) {
+	this->hp_prog_->setPercentage(static_cast<float>(this->hp_) / this->max_hp_ * 100);
+	if (this->hp_ <= 0) {
 		this->is_dead_ = true;
 		GameManager::getInstance()->getMonsters().eraseObject(this);
 		this->dying();

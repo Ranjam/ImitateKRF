@@ -8,7 +8,7 @@ const float ArchersTower::kArcherTowerLv1Scope = 150.0f;
 const float ArchersTower::kArcherTowerLv2Scope = 200.0f;
 const float ArchersTower::kArcherTowerLv3Scope = 250.0f;
 
-ArchersTower::ArchersTower():BaseTower(
+ArchersTower::ArchersTower(): BaseTower(
 	TowerType::ARCHER,  // type
 	"",	// name
 	1, // level

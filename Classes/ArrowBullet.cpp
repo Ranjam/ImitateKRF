@@ -36,10 +36,13 @@ void ArrowBullet::destroy() {
 void ArrowBullet::shootBy(Vec2 delta_vec, float height, float duration, CallFunc *call_func) {
 
 	// set the control point
-	Vec2 mid_point = Vec2(delta_vec.x / 2, delta_vec.y > 0 ? delta_vec.y + height : height);
+	Vec2 mid_point = Vec2(delta_vec.x / 2, delta_vec.y > 0 ? delta_vec.y + height + 50 : height);
 	ccBezierConfig bezier_config;
 	bezier_config.controlPoint_1 = bezier_config.controlPoint_2 = mid_point;
 	bezier_config.endPosition = delta_vec;
+	if (delta_vec.y > 0) {
+		bezier_config.endPosition.y += 50;
+	}
 	   
 	// set the start angle and end angle
 	float start_angle;
@@ -60,7 +63,7 @@ void ArrowBullet::shootBy(Vec2 delta_vec, float height, float duration, CallFunc
 
 	Spawn *spawn;
 	if (start_angle < -75 || start_angle > 255) {
-		// if start angle approach right angle, direct flip angle
+		// if start angle approach right angle, flip the angle directly
 		spawn = Spawn::create(BezierTo::create(duration, bezier_config),
 		                            Sequence::create(DelayTime::create(duration * (delta_vec.y > 0 ? 0.6f : 0.4f)), 
 		                                             CallFunc::create([=]() {

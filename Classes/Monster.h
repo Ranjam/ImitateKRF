@@ -39,10 +39,10 @@ public:
 	CC_SYNTHESIZE(int, type_, Type);
 
 	// 血量
-	CC_SYNTHESIZE(float, hp_, HP);
+	CC_SYNTHESIZE(int, hp_, HP);
 
 	// 最高血量
-	CC_SYNTHESIZE(float, max_hp_, MaxHP);
+	CC_SYNTHESIZE(int, max_hp_, MaxHP);
 
 	// 当前状态
 	CC_SYNTHESIZE(MonsterState, state_, State);
