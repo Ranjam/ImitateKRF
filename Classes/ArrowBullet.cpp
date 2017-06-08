@@ -1,5 +1,5 @@
 #include "ArrowBullet.h"
-
+#include "QuadraticBezierBy.h"
 
 
 ArrowBullet::ArrowBullet() {
@@ -18,6 +18,7 @@ bool ArrowBullet::init() {
 
 	this->initWithSpriteFrameName("arrow.png");
 	this->setFlippedX(true);
+	this->setAnchorPoint(Vec2(1, 0.5));
 
 	return true;
 }
@@ -32,51 +33,60 @@ void ArrowBullet::destroy() {
 	this->removeFromParentAndCleanup(true);
 }
 
-// todo: update more beautiful curve
+//// todo: update more beautiful curve
+//void ArrowBullet::shootBy(Vec2 delta_vec, float height, float duration, CallFunc *call_func) {
+//
+//	// set the control point
+//	Vec2 mid_point = Vec2(delta_vec.x / 2, delta_vec.y + height);
+//	ccBezierConfig bezier_config;
+//	bezier_config.controlPoint_1 = bezier_config.controlPoint_2 = mid_point;
+//	bezier_config.endPosition = delta_vec;
+//	   
+//	// set the start angle and end angle
+//	float start_angle;
+//	if (fabs(delta_vec.x - 0) > 0.000001) {
+//		start_angle = CC_RADIANS_TO_DEGREES(atan(height / (delta_vec.x / 2)));
+//	} else {
+//		start_angle = -90;
+//	}
+//	float end_angle;
+//	if (delta_vec.x >= 0) {
+//		start_angle = -start_angle;
+//		end_angle = 75.0f;
+//	} else {
+//		start_angle = 180.0f - start_angle;
+//		end_angle = -255.0f;
+//	}
+//	this->setRotation(start_angle);
+//
+//	Spawn *spawn;
+//	if (start_angle < -75 || start_angle > 255) {
+//		// if start angle approach right angle, flip the angle directly
+//		spawn = Spawn::create(BezierTo::create(duration, bezier_config),
+//		                            Sequence::create(DelayTime::create(duration * (delta_vec.y > 0 ? 0.6f : 0.4f)), 
+//		                                             CallFunc::create([=]() {
+//				                                             this->setRotation(90);
+//			                                             }), 
+//		                                             NULL),
+//		                            NULL);
+//	} else {
+//		spawn = Spawn::create(BezierTo::create(duration, bezier_config),
+//							  Sequence::create(DelayTime::create(duration * 0.1f), 
+//											   RotateTo::create(duration * 0.9f, end_angle), 
+//											   NULL),
+//		                      NULL);
+//	}
+//	this->runAction(Sequence::create(spawn, call_func, NULL));
+//}
+
 void ArrowBullet::shootBy(Vec2 delta_vec, float height, float duration, CallFunc *call_func) {
 
-	// set the control point
-	Vec2 mid_point = Vec2(delta_vec.x / 2, delta_vec.y > 0 ? delta_vec.y + height + 50 : height);
-	ccBezierConfig bezier_config;
-	bezier_config.controlPoint_1 = bezier_config.controlPoint_2 = mid_point;
-	bezier_config.endPosition = delta_vec;
-	if (delta_vec.y > 0) {
-		bezier_config.endPosition.y += 50;
-	}
-	   
-	// set the start angle and end angle
-	float start_angle;
-	if (fabs(delta_vec.x - 0) > 0.000001) {
-		start_angle = CC_RADIANS_TO_DEGREES(atan(height / (delta_vec.x / 2)));
-	} else {
-		start_angle = -90;
-	}
-	float end_angle;
-	if (delta_vec.x >= 0) {
-		start_angle = -start_angle;
-		end_angle = 75.0f;
-	} else {
-		start_angle = 180.0f - start_angle;
-		end_angle = -255.0f;
-	}
-	this->setRotation(start_angle);
+	// bezier config
+	ccQuadraticBezierConfig config;
+	config.controlPoint = Vec2(delta_vec.x / 2, delta_vec.y + height);
+	config.endPosition = delta_vec;
 
-	Spawn *spawn;
-	if (start_angle < -75 || start_angle > 255) {
-		// if start angle approach right angle, flip the angle directly
-		spawn = Spawn::create(BezierTo::create(duration, bezier_config),
-		                            Sequence::create(DelayTime::create(duration * (delta_vec.y > 0 ? 0.6f : 0.4f)), 
-		                                             CallFunc::create([=]() {
-				                                             this->setRotation(90);
-			                                             }), 
-		                                             NULL),
-		                            NULL);
-	} else {
-		spawn = Spawn::create(BezierTo::create(duration, bezier_config),
-							  Sequence::create(DelayTime::create(duration * 0.1f), 
-											   RotateTo::create(duration * 0.9f, end_angle), 
-											   NULL),
-		                      NULL);
-	}
-	this->runAction(Sequence::create(spawn, call_func, NULL));
+	auto sequence = Sequence::create(QuadraticBezierBy::create(duration, config, true), call_func, NULL);
+
+	this->runAction(sequence);
 }

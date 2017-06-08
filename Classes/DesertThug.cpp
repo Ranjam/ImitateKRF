@@ -7,7 +7,13 @@ DesertThug::~DesertThug() {
 }
 
 bool DesertThug::init(int type, const std::vector<Vec2> &path) {
-	if (!Monster::init(type, path)) {
+	if (!Monster::init(type,
+					   path, 
+					   18.0f, // speed
+					   100, // hp
+					   100, // max hp
+					   false // is dead
+					   )) {
 		return false;
 	}
 
@@ -15,7 +21,7 @@ bool DesertThug::init(int type, const std::vector<Vec2> &path) {
 	this->addChild(image_, -1);
 	
 	hp_bg_ = Sprite::createWithSpriteFrameName("lifebar_bg_small.png");
-	hp_bg_->setPosition(0.0f, 20.0f);
+	hp_bg_->setPosition(0.0f, 25.0f);
 	this->addChild(hp_bg_, 0);
 
 	hp_prog_ = ProgressTimer::create(Sprite::createWithSpriteFrameName("lifebar_small.png"));
@@ -23,11 +29,8 @@ bool DesertThug::init(int type, const std::vector<Vec2> &path) {
 	hp_prog_->setMidpoint(Vec2(0.0f, 0.5f));
 	hp_prog_->setScaleY(1.5f);
 	hp_prog_->setPercentage(100.0f);
-	hp_prog_->setPosition(0.0f, 20.0f);
+	hp_prog_->setPosition(0.0f, 25.0f);
 	this->addChild(hp_prog_, 1);
-
-	this->setHP(100);
-	this->setMaxHP(100);
 
 	return true;
 }
@@ -79,34 +82,6 @@ void DesertThug::setState(MonsterState state) {
 	}
 	animationAct->setTag(0);
 	image_->runAction(animationAct);
-}
-
-void DesertThug::keepGoing() {
-	//static int current_target_point_ = 1; // there can't use static
-
-	if (current_target_point_ < path_.size() && this->getPosition() != path_[current_target_point_]) {
-
-		float dx = path_[current_target_point_].x - this->getPosition().x;
-		float dy = path_[current_target_point_].y - this->getPosition().y;
-		
-		if (fabs(dy) > fabs(dx) && dy > 0) {
-			// up
-			setState(MonsterState::WALK_UP);
-		} else if (fabs(dy) > fabs(dx) && dy < 0) {
-			// down
-			setState(MonsterState::WALK_DOWN);
-		} else if (dx < 0) {
-			// left
-			setState(MonsterState::WALK_LEFT);
-		} else {
-			// right
-			setState(MonsterState::WALK_RIGHT);
-		}
-
-		float distance = this->path_[current_target_point_].getDistance(this->path_[current_target_point_ - 1]);
-		this->runAction(Sequence::create(MoveTo::create(distance / this->speed_, Vec2(path_[current_target_point_].x, path_[current_target_point_].y)), CallFunc::create(CC_CALLBACK_0(DesertThug::keepGoing, this)), NULL));
-		++current_target_point_;
-	}
 }
 
 void DesertThug::dying() {

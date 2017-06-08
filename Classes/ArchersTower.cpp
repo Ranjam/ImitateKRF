@@ -15,7 +15,7 @@ ArchersTower::ArchersTower(): BaseTower(
 	kArcherTowerLv1Scope, // scope
 	kArcherTowerLv2Scope, // next scope
 	1.0f, // rate
-	50.0f, // power
+	20.0f, // power
 	20, // upgrade price
 	10, // selling price
 	nullptr // target monster
@@ -38,7 +38,7 @@ bool ArchersTower::init() {
 
 void ArchersTower::attack(float dt) {
 
-	checkNearestMonster();
+	this->checkNearestMonster();
 
 	if (nearest_monster_ != nullptr) {
 		Monster *target_monster = this->nearest_monster_;
@@ -81,6 +81,7 @@ void ArchersTower::attack(float dt) {
 		{
 			arrow->setVisible(true);
 			arrow->shootBy(relative_archer, 150.0f, 0.5f, CallFunc::create([=]() {
+
 				for (auto monster : GameManager::getInstance()->getMonsters()) {
 					Vec2 world_arrow_origin = monster->convertToNodeSpace(arrow->getParent()->convertToWorldSpace(arrow->getPosition()));
 					Rect arrow_rect = Rect(world_arrow_origin.x,

@@ -44,7 +44,10 @@ void MonsterLayer::monsterIncoming(float dt) {
 	if (current_monster_ < monster_info_.at(current_wave_).size()) {
 		auto monster_info = monster_info_.at(current_wave_).at(current_monster_);
 		auto monster = generateMonster(monster_info.type, monster_info.path);
-		this->addChild(monster);
+
+		// different monsters have different z-order
+		this->addChild(monster, static_cast<int>(1000 - monster->getPosition().y));
+
 		monster->keepGoing();
 		GameManager::getInstance()->getMonsters().pushBack(monster);
 		++current_monster_;

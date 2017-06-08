@@ -19,19 +19,14 @@ public:
 		return nullptr;
 	}
 
-	bool init(int type, const std::vector<Vec2> &path) override;
+	bool init(int type, const std::vector<Vec2> &path);
 
 	void update(float dt) override;
 
 	void setState(MonsterState state) override;
 
-	void keepGoing() override;
-
 	void dying() override;
 
-private:
-	int current_target_point_ = 1; // current point
-	float speed_ = 25.0f;
 };
 
 #endif

@@ -22,36 +22,28 @@ public:
 	Monster();
 	~Monster();
 
-	//static Monster* create(int type, int road, int path) {
-	//	Monster *pRet = new(std::nothrow) Monster();
-	//	if (pRet && pRet->init(type, road, path)) {
-	//		pRet->autorelease();
-	//		return pRet;
-	//	}
-	//	delete pRet;
-	//	pRet = nullptr;
-	//	return nullptr;
-	//}
-
-	virtual bool init(int type, const std::vector<Vec2> &path);
-
-	// 怪物类型
+	// monster type
 	CC_SYNTHESIZE(int, type_, Type);
 
-	// 血量
+	// speed
+	CC_SYNTHESIZE(float, speed_, Speed);
+
+	// HP
 	CC_SYNTHESIZE(int, hp_, HP);
 
-	// 最高血量
+	// MAX HP
 	CC_SYNTHESIZE(int, max_hp_, MaxHP);
 
-	// 当前状态
+	// current state
 	CC_SYNTHESIZE(MonsterState, state_, State);
 
 	// is dead
 	CC_SYNTHESIZE(bool, is_dead_, IsDead);
 
+	virtual bool init(int type, const std::vector<Vec2> &path, float speed, int hp, int max_hp, bool is_dead);
+
 public:
-	virtual void keepGoing() = 0;
+	virtual void keepGoing();
 
 	virtual void getDamage(float damage);
 
@@ -66,6 +58,7 @@ protected:
 	Sprite *hp_bg_;
 	ProgressTimer *hp_prog_;
 	std::vector<Vec2> path_;
+	int current_target_point_ = 1; // current point
 };
 
 #endif
