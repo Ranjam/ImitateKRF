@@ -3,7 +3,6 @@
 
 #include "Monster.h"
 #include "cocos2d.h"
-#include "GameManager.h"
 
 USING_NS_CC;
 
@@ -29,10 +28,6 @@ public:
 
 	bool waveIsOver() const {
 		return wave_over_;
-	}
-
-	bool allOver() const {
-		return GameManager::getInstance()->getCurrentWave() == GameManager::getInstance()->getWaveCount();
 	}
 
 	std::vector<std::vector<MonsterInfo>> &getMonsterInfo() {

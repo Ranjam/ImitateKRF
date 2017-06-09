@@ -2,6 +2,8 @@
 #include "Common.h"
 #include "Stronghold.h"
 #include "GameManager.h"
+#include "DefendFlag.h"
+#include "WarningFlag.h"
 
 Battlefield::Battlefield() {
 }
@@ -52,7 +54,7 @@ bool Battlefield::init(int level) {
 		this->setPosition(targetPostion);
 	};
 
-#if 1
+#if 0
 	// debug to decide point
 	touch_move_listener->onTouchEnded = [=](Touch *touch, Event *event) {
 		auto point = this->monster_layer_->convertTouchToNodeSpace(touch);
@@ -71,6 +73,24 @@ bool Battlefield::init(int level) {
 }
 
 void Battlefield::nextWave() {
+	for (int i = 0; i < warning_flags_info_.size(); ++i) {
+		this->removeChildByTag(Tag::WARNING_FLAG + i);
+	}
+	if (GameManager::getInstance()->getCurrentWave() != GameManager::getInstance()->getWaveCount()) {
+		GameManager::getInstance()->setCurrentWave(GameManager::getInstance()->getCurrentWave() + 1);
+		monster_layer_->nextWave();
+	}
+}
+
+void Battlefield::waveOver() {
+	if (GameManager::getInstance()->getCurrentWave() != GameManager::getInstance()->getWaveCount()) {
+		for (int i = 0; i < warning_flags_info_.size(); ++i) {
+			auto warning_flag = WarningFlag::create();
+			warning_flag->setPosition(warning_flags_info_.at(i));
+			this->addChild(warning_flag, 1, Tag::WARNING_FLAG + i);
+			warning_flag->start();
+		}
+	}
 }
 
 void Battlefield::loadLevelData() {
@@ -96,13 +116,13 @@ void Battlefield::loadLevelData() {
 
 	// warning flags
 	auto level_warning_flags = data_map.at("warning_flag").asValueVector();
-	for (auto value : level_warning_flags) {
-		auto info = value.asValueMap();
+	for (auto i = 0; i < level_warning_flags.size(); ++i) {
+		auto info = level_warning_flags.at(i).asValueMap();
 		Vec2 pos = Vec2(info.at("x").asFloat(), info.at("y").asFloat());
 		this->warning_flags_info_.push_back(pos);
 		auto warning_flag = WarningFlag::create();
 		warning_flag->setPosition(pos);
-		this->addChild(warning_flag, 1, 123);
+		this->addChild(warning_flag, 1, Tag::WARNING_FLAG + i);
 	}
 
 	// stronghold

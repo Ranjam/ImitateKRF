@@ -1,6 +1,7 @@
 #include "MonsterLayer.h"
 #include "DesertThug.h"
 #include "GameManager.h"
+#include "Battlefield.h"
 
 
 MonsterLayer::MonsterLayer() {
@@ -20,8 +21,8 @@ bool MonsterLayer::init() {
 }
 
 void MonsterLayer::nextWave() {
-	if (wave_over_ && GameManager::getInstance()->getCurrentWave() < GameManager::getInstance()->getWaveCount()) {
-		schedule(schedule_selector(MonsterLayer::monsterIncoming), 3.0f);
+	if (wave_over_) {
+		schedule(schedule_selector(MonsterLayer::monsterIncoming), 1.0f);
 		wave_over_ = false;
 	}
 }
@@ -40,7 +41,7 @@ Monster* MonsterLayer::generateMonster(int type, int path) {
 }
 
 void MonsterLayer::monsterIncoming(float dt) {
-	int current_wave = GameManager::getInstance()->getCurrentWave();
+	int current_wave = GameManager::getInstance()->getCurrentWave() - 1;
 	if (current_monster_ < monster_info_.at(current_wave).size()) {
 		auto monster_info = monster_info_.at(current_wave).at(current_monster_);
 		auto monster = generateMonster(monster_info.type, monster_info.path);
@@ -53,8 +54,8 @@ void MonsterLayer::monsterIncoming(float dt) {
 		++current_monster_;
 	} else {
 		unschedule(schedule_selector(MonsterLayer::monsterIncoming));
-		GameManager::getInstance()->setCurrentWave(current_wave + 1);
 		current_monster_ = 0;
 		wave_over_ = true;
+		static_cast<Battlefield *>(this->getParent())->waveOver();
 	}
 }

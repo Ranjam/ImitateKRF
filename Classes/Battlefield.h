@@ -4,12 +4,14 @@
 #include "cocos2d.h"
 #include "BaseMap.h"
 #include "MonsterLayer.h"
-#include "WarningFlag.h"
-#include "DefendFlag.h"
 
 USING_NS_CC;
 
 class Battlefield: public Layer {
+public:
+	enum Tag {
+		WARNING_FLAG = 0
+	};
 public:
 	Battlefield();
 	~Battlefield();
@@ -28,6 +30,8 @@ public:
 	bool init(int level);
 
 	void nextWave();
+
+	void waveOver();
 
 	void loadLevelData();
 
