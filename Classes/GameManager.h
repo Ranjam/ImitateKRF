@@ -27,10 +27,10 @@ private:
 	GameManager &operator=(const GameManager &) = delete;
 	~GameManager();
 
+	CC_SYNTHESIZE(int, current_wave_, CurrentWave);
 	CC_SYNTHESIZE(int, gold_, Gold);
 	CC_SYNTHESIZE(int, life_, Life);
 	CC_SYNTHESIZE(int, wave_count_, WaveCount);
-
 private:
 	Vector<Monster *> monsters_;
 };

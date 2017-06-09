@@ -5,7 +5,7 @@ Monster::Monster() { }
 
 Monster::~Monster() { }
 
-bool Monster::init(int type, const std::vector<Vec2>& path, float speed, int hp, int max_hp, bool is_dead) {
+bool Monster::init(int type, const std::vector<Vec2>& path, float speed, int hp, int max_hp, bool is_removed) {
 	if (!Sprite::init()) {
 		return false;
 	}
@@ -15,7 +15,7 @@ bool Monster::init(int type, const std::vector<Vec2>& path, float speed, int hp,
 	this->speed_ = speed;
 	this->hp_ = hp;
 	this->max_hp_ = max_hp;
-	this->is_dead_ = is_dead;
+	this->is_removed_ = is_removed;
 	this->setPosition(path[0].x, path[0].y);
 
 	return true;
@@ -53,7 +53,7 @@ void Monster::getDamage(float damage) {
 	this->hp_ -= damage;
 	this->hp_prog_->setPercentage(static_cast<float>(this->hp_) / this->max_hp_ * 100);
 	if (this->hp_ <= 0) {
-		this->is_dead_ = true;
+		this->is_removed_ = true;
 		GameManager::getInstance()->getMonsters().eraseObject(this);
 		this->dying();
 	}

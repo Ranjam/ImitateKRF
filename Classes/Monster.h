@@ -37,10 +37,10 @@ public:
 	// current state
 	CC_SYNTHESIZE(MonsterState, state_, State);
 
-	// is dead
-	CC_SYNTHESIZE(bool, is_dead_, IsDead);
+	// is removed
+	CC_SYNTHESIZE(bool, is_removed_, IsRemoved);
 
-	virtual bool init(int type, const std::vector<Vec2> &path, float speed, int hp, int max_hp, bool is_dead);
+	virtual bool init(int type, const std::vector<Vec2> &path, float speed, int hp, int max_hp, bool is_removed);
 
 public:
 	virtual void keepGoing();

@@ -1,4 +1,5 @@
 #include "WarningFlag.h"
+#include "Battlefield.h"
 
 WarningFlag::WarningFlag() {
 }
@@ -48,6 +49,8 @@ bool WarningFlag::init() {
 			selected_->setVisible(true);
 		} else {
 			this->stop();
+			static_cast<Battlefield *>(this->getParent())->nextWave();
+			//this->removeFromParent();
 		}
 	};
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(select_listener, flag_bg);

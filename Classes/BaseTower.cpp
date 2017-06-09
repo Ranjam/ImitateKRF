@@ -41,7 +41,7 @@ void BaseTower::checkNearestMonster() {
 	if (this->nearest_monster_ != nullptr) {
 		// if monster is dead or monster beyond attack scope, release the handle
 		distance = this->getParent()->getPosition().getDistance(this->nearest_monster_->getPosition());
-		if (this->nearest_monster_->getIsDead() || distance > this->scope_) {
+		if (this->nearest_monster_->getIsRemoved() || distance > this->scope_) {
 			this->nearest_monster_->release();
 			this->nearest_monster_ = nullptr;
 		}

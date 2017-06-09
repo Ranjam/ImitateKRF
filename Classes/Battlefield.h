@@ -5,6 +5,7 @@
 #include "BaseMap.h"
 #include "MonsterLayer.h"
 #include "WarningFlag.h"
+#include "DefendFlag.h"
 
 USING_NS_CC;
 
@@ -26,18 +27,14 @@ public:
 
 	bool init(int level);
 
-	void updateWave(float dt);
-
-	void updateFlag(float dt);
+	void nextWave();
 
 	void loadLevelData();
 
 private:
 	BaseMap *map_;
 	MonsterLayer *monster_layer_;
-
-	// wave flags
-	WarningFlag *warning_flags_;
+	std::vector<Vec2> warning_flags_info_;
 };
 
 #endif

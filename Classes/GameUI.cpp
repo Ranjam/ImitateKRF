@@ -1,4 +1,5 @@
 #include "GameUI.h"
+#include "Common.h"
 
 GameUI::GameUI() {
 }
@@ -11,6 +12,27 @@ bool GameUI::init() {
 	if (!Layer::init()) {
 		return false;
 	}
+
+	// set hud background
+	auto hud_bg = Sprite::createWithSpriteFrameName("hud_background.png");
+	hud_bg->setAnchorPoint(Vec2(0, 1));
+	hud_bg->setPosition(20, winSize.height - 20);
+	this->addChild(hud_bg);
+
+	// life label
+	life_label_ = Label::createWithTTF(std::to_string(GameManager::getInstance()->getLife()), "fonts/arial.ttf", 18);
+	life_label_->setPosition(Point(hud_bg->getContentSize().width / 4, hud_bg->getContentSize().height / 4 * 3));
+	hud_bg->addChild(life_label_);
+
+	// gold label
+	gold_label_ = Label::createWithTTF(std::to_string(GameManager::getInstance()->getGold()), "fonts/arial.ttf", 18);
+	gold_label_->setPosition(Point(hud_bg->getContentSize().width / 4 * 3, hud_bg->getContentSize().height / 4 * 3));
+	hud_bg->addChild(gold_label_);
+
+	// wave label
+	wave_label_ = Label::createWithTTF("WAVE 0 / " + std::to_string(GameManager::getInstance()->getWaveCount()), "fonts/arial.ttf", 18);
+	wave_label_->setPosition(Point(hud_bg->getContentSize().width / 2, hud_bg->getContentSize().height / 5 + 1));
+	hud_bg->addChild(wave_label_);
 
 	// set meteor skill
 	addSkill("power_portrait_fireball_0001.png", "power_portrait_fireball_0002.png");
@@ -43,6 +65,7 @@ bool GameUI::init() {
 	_eventDispatcher->addEventListenerWithFixedPriority(select_target_, 1);
 
 	schedule(schedule_selector(GameUI::updateSkills));
+	scheduleUpdate();
 
 	return true;
 }
@@ -113,4 +136,13 @@ void GameUI::resetSkillsClick() {
 		skills[i].on_click = false;
 		skills[i].background->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(skills[i].normal_image));
 	}
+}
+
+void GameUI::update(float dt) {
+	
+	this->setLifeLabel(std::to_string(GameManager::getInstance()->getLife()));
+
+	this->setGoldLabel(std::to_string(GameManager::getInstance()->getGold()));
+
+	this->setWaveLabel(std::to_string(GameManager::getInstance()->getCurrentWave()));
 }

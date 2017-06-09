@@ -55,7 +55,7 @@ public:
 private:
 	ProgressTimer *progressTimer_;
 	Sprite *selected_;
-	float speed_ = 1.5f;
+	float speed_ = 10.0f;
 	bool is_selected_ = false;
 	bool is_over_ = false;
 	int path_;

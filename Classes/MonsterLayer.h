@@ -3,6 +3,7 @@
 
 #include "Monster.h"
 #include "cocos2d.h"
+#include "GameManager.h"
 
 USING_NS_CC;
 
@@ -31,7 +32,7 @@ public:
 	}
 
 	bool allOver() const {
-		return current_wave_ == monster_info_.size();
+		return GameManager::getInstance()->getCurrentWave() == GameManager::getInstance()->getWaveCount();
 	}
 
 	std::vector<std::vector<MonsterInfo>> &getMonsterInfo() {
@@ -49,7 +50,6 @@ private:
 	// all monsters infomation
 	std::vector<std::vector<MonsterInfo>> monster_info_;
 
-	unsigned int current_wave_ = 0;
 	unsigned int current_monster_ = 0;
 	bool wave_over_ = true;
 };

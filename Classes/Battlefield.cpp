@@ -16,8 +16,6 @@ bool Battlefield::init(int level) {
 		return false;
 	}
 
-	schedule(schedule_selector(Battlefield::updateWave), 1 / 60.0f);
-
 	// map
 	map_ = BaseMap::create(level);
 	map_->setAnchorPoint(Vec2(0, 0));
@@ -31,16 +29,10 @@ bool Battlefield::init(int level) {
 	this->addChild(monster_layer_, 1);
 
 	// warning flag
-	auto flag = WarningFlag::create();
-	flag->setPosition(1085, winSize.height / 2 + 172);
-	flag->setSpeed(10);
-	this->addChild(flag, 2);
-	warning_flags_ = flag;
-
-	// stronghold
-	//auto hold = Stronghold::create();
-	//hold->setPosition(winSize.width / 2 + 200, winSize.height / 2 + 180);
-	//this->addChild(hold, 1);
+	//auto flag = WarningFlag::create();
+	//flag->setPosition(1085, winSize.height / 2 + 172);
+	//flag->setSpeed(10);
+	//this->addChild(flag, 2);
 
 	// load level data
 	loadLevelData();
@@ -60,7 +52,7 @@ bool Battlefield::init(int level) {
 		this->setPosition(targetPostion);
 	};
 
-#if 0
+#if 1
 	// debug to decide point
 	touch_move_listener->onTouchEnded = [=](Touch *touch, Event *event) {
 		auto point = this->monster_layer_->convertTouchToNodeSpace(touch);
@@ -78,24 +70,7 @@ bool Battlefield::init(int level) {
 	return true;
 }
 
-void Battlefield::updateWave(float dt) {
-	if (monster_layer_->allOver()) {
-		unschedule(schedule_selector(Battlefield::updateWave));
-		return;
-	}
-	if (warning_flags_->isOver() && monster_layer_->waveIsOver()) {
-		monster_layer_->nextWave();
-		unschedule(schedule_selector(Battlefield::updateWave));
-		schedule(schedule_selector(Battlefield::updateFlag), dt);
-	}
-}
-
-void Battlefield::updateFlag(float dt) {
-	if (monster_layer_->waveIsOver() && warning_flags_->isOver()) {
-		warning_flags_->start();
-		unschedule(schedule_selector(Battlefield::updateFlag));
-		schedule(schedule_selector(Battlefield::updateWave));
-	}
+void Battlefield::nextWave() {
 }
 
 void Battlefield::loadLevelData() {
@@ -107,6 +82,28 @@ void Battlefield::loadLevelData() {
 	GameManager::getInstance()->setGold(level_data.at("gold").asInt());
 	GameManager::getInstance()->setLife(level_data.at("life").asInt());
 	GameManager::getInstance()->setWaveCount(level_data.at("wave_count").asInt());
+	// set current wave
+	GameManager::getInstance()->setCurrentWave(0);
+
+	// defend flags
+	auto level_defend_flags = data_map.at("defend_flag").asValueVector();
+	for (auto value : level_defend_flags) {
+		auto info = value.asValueMap();
+		auto defend_flag = DefendFlag::create();
+		defend_flag->setPosition(info.at("x").asFloat(), info.at("y").asFloat());
+		this->addChild(defend_flag, 1);
+	}
+
+	// warning flags
+	auto level_warning_flags = data_map.at("warning_flag").asValueVector();
+	for (auto value : level_warning_flags) {
+		auto info = value.asValueMap();
+		Vec2 pos = Vec2(info.at("x").asFloat(), info.at("y").asFloat());
+		this->warning_flags_info_.push_back(pos);
+		auto warning_flag = WarningFlag::create();
+		warning_flag->setPosition(pos);
+		this->addChild(warning_flag, 1, 123);
+	}
 
 	// stronghold
 	auto level_stronghold = data_map.at("stronghold").asValueVector();

@@ -15,6 +15,22 @@
             <key>wave_count</key>
             <string>3</string>
         </dict>
+        <!-- defend flag 位置 -->
+        <key>defend_flag</key>
+        <array>
+            <dict>
+                <key>x</key>
+                <string>97.6289</string>
+                <key>y</key>
+                <string>489.721</string>
+            </dict>
+        </array>
+        <key>warning_flag</key>
+        <array>
+            <dict><key>x</key><string>1096.26</string><key>y</key><string>485.727</string></dict>
+            <dict><key>x</key><string>299.296</string><key>y</key><string>680.406</string></dict>
+        </array>
+        <!-- stronghold 位置 -->
         <key>stronghold</key>
         <array>
             <dict>
