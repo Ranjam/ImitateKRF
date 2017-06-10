@@ -17,6 +17,8 @@ bool MonsterLayer::init() {
 		return false;
 	}
 
+	scheduleUpdate();
+
 	return true;
 }
 
@@ -25,6 +27,20 @@ void MonsterLayer::nextWave() {
 		schedule(schedule_selector(MonsterLayer::monsterIncoming), 1.0f);
 		wave_over_ = false;
 	}
+}
+
+void MonsterLayer::cleanUpMonster() {
+	for (auto iter = GameManager::getInstance()->getMonsters().begin(); iter != GameManager::getInstance()->getMonsters().end(); ) {
+		if ((*iter)->getIsRemoved()) {
+			iter = GameManager::getInstance()->getMonsters().erase(iter);
+		} else {
+			++iter;
+		}
+	}
+}
+
+void MonsterLayer::update(float dt) {
+	cleanUpMonster();
 }
 
 Monster* MonsterLayer::generateMonster(int type, int path) {

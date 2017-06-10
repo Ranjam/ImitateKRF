@@ -1,5 +1,5 @@
 #include "FireballBullet.h"
-
+#include "GameManager.h"
 
 
 FireballBullet::FireballBullet() {
@@ -64,13 +64,25 @@ void FireballBullet::particleEffect(float dt) {
 
 void FireballBullet::explode() {
 	// fireball_explosion_00%02d.png
-	auto explosion = Sprite::createWithSpriteFrameName("fireball_explosion_0001.png");
+	auto explosion = Sprite::createWithSpriteFrameName("fireball_explosion_0017.png");
 	this->addChild(explosion, 3);
 	explosion->setPosition(fire_ball_->getPosition());
 	unschedule(schedule_selector(FireballBullet::particleEffect));
 	fire_ball_->removeFromParent();
 	explosion->runAction(Sequence::create(Animate::create(AnimationCache::getInstance()->getAnimation("fireball_explosion")),
+										  CallFunc::create(CC_CALLBACK_0(FireballBullet::damage, this, explosion)),
 										  CallFunc::create(CC_CALLBACK_0(FireballBullet::removeFromParent, this)),
 										  NULL));
 
+}
+
+void FireballBullet::damage(Node* explosion) {
+	for (auto monster : GameManager::getInstance()->getMonsters()) {
+		Vec2 origin = this->convertToWorldSpace(explosion->getBoundingBox().origin);
+		origin = monster->convertToNodeSpace(origin);
+		Rect rect = Rect(origin, explosion->getBoundingBox().size);
+		if (monster->getImage()->getBoundingBox().intersectsRect(rect)) {
+			monster->getDamage(30);
+		}
+	}
 }

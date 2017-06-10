@@ -69,6 +69,10 @@ bool Battlefield::init(int level) {
 #endif
 
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(touch_move_listener, this);
+
+	// add this to GameManager
+	GameManager::getInstance()->setBattlefield(this);
+
 	return true;
 }
 

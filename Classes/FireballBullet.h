@@ -17,6 +17,7 @@ public:
 
 	void particleEffect(float dt);
 	void explode();
+	void damage(Node *explosion);
 
 private:
 	Sprite *fire_ball_;

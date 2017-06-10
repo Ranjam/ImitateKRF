@@ -6,6 +6,8 @@
 
 USING_NS_CC;
 
+class Battlefield;
+
 class GameManager {
 public:
 	static GameManager *getInstance() {
@@ -31,6 +33,7 @@ private:
 	CC_SYNTHESIZE(int, gold_, Gold);
 	CC_SYNTHESIZE(int, life_, Life);
 	CC_SYNTHESIZE(int, wave_count_, WaveCount);
+	CC_SYNTHESIZE(Battlefield *, battlefield_, Battlefield);
 private:
 	Vector<Monster *> monsters_;
 };

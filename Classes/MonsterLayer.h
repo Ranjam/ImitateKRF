@@ -22,6 +22,10 @@ public:
 
 	void nextWave();
 
+	void cleanUpMonster();
+
+	void update(float dt) override;
+
 	Monster *generateMonster(int type, int path);
 
 	void monsterIncoming(float dt);

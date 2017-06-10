@@ -54,7 +54,6 @@ void Monster::getDamage(float damage) {
 	this->hp_prog_->setPercentage(static_cast<float>(this->hp_) / this->max_hp_ * 100);
 	if (this->hp_ <= 0) {
 		this->is_removed_ = true;
-		GameManager::getInstance()->getMonsters().eraseObject(this);
 		this->dying();
 	}
 }
