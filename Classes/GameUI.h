@@ -3,17 +3,9 @@
 
 #include "cocos2d.h"
 #include "GameManager.h"
+#include "Skill.h"
 
 USING_NS_CC;
-
-struct SkillRecord {
-	bool on_click;
-	bool on_doing;
-	ProgressTimer *progress_timer;
-	Sprite *background;
-	std::string normal_image;
-	std::string active_image;
-};
 
 class GameUI: public Layer {
 public:
@@ -23,13 +15,6 @@ public:
 	CREATE_FUNC(GameUI);
 
 	bool init() override;
-
-	// fire skill set and update
-	void addSkill(const char *skill_image, const char *skill_active_image);
-
-	void updateSkills(float dt);
-
-	void resetSkillsClick();
 
 	// set life
 	void setLifeLabel(std::string life) const {
@@ -41,17 +26,20 @@ public:
 		gold_label_->setString(gold);
 	}
 
+	void addSkill(Skill *skill);
+
 	// set wave
 	void setWaveLabel(std::string wave) const {
 		wave_label_->setString("WAVE " + wave + " / " + std::to_string(GameManager::getInstance()->getWaveCount()));
 	}
 
+	// reset onclicked skills to normal state
+	void resetClickedSkills();
+
 	void update(float dt) override;
 
 private:
-	EventListenerTouchOneByOne *select_target_;
-
-	std::vector<SkillRecord> skills;
+	std::vector<Skill *> skills_;
 
 public:
 	Label *life_label_;

@@ -91,6 +91,18 @@ void Loading::loadingAnimations() {
 	animation = createAnimation("tower_archer_lvl3_shooter_00%02d.png", 11, 18, 0.04f);
 	animation->addSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("tower_archer_lvl3_shooter_0002.png"));
 	AnimationCache::getInstance()->addAnimation(animation, "archer_lv3_shoot_up");
+
+	// fireball explosion
+	AnimationCache::getInstance()->addAnimation(createAnimation("fireball_explosion_00%02d.png", 1, 17, 0.05f), "fireball_explosion");
+
+	// fireball particle
+	AnimationCache::getInstance()->addAnimation(createAnimation("fireball_particle_00%02d.png", 1, 4, 0.05f), "fireball_particle");
+
+	// fireball shadow
+	AnimationCache::getInstance()->addAnimation(createAnimation("fireball_shadow_00%02d.png", 1, 20, 0.05f), "fireball_shadow");
+
+	// fireball proyectile
+	AnimationCache::getInstance()->addAnimation(createAnimation("fireball_proyectile_00%02d.png", 1, 5, 0.05f), "fireball_proyectile");
 }
 
 Animation* Loading::createAnimation(std::string files_name, int start_index, int end_index, float delay) {

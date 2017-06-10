@@ -18,6 +18,10 @@ public:
 
 	bool init() override;
 
+	Battlefield *getBattlefield() const {
+		return battle_field_;
+	}
+
 private:
 	Battlefield *battle_field_;
 	GameUI *ui_;

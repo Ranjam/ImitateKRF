@@ -24,9 +24,7 @@ bool ArrowBullet::init() {
 }
 
 void ArrowBullet::attack() {
-	//this->runAction(Sequence::create(bullet_animation_, 
-									 //CallFunc::create(CC_CALLBACK_0(ArrowBullet::destroy, this)),
-									 //NULL));
+
 }
 
 void ArrowBullet::destroy() {

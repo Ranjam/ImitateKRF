@@ -23,7 +23,7 @@ public:
 	 * \param delta_vec the target relative vector
 	 * \param height the max height
 	 * \param duration action duration time
-	 * \param call_func when action finish do
+	 * \param call_func when action finished do
 	 */
 	void shootBy(Vec2 delta_vec, float height, float duration, CallFunc *call_func);
 };
