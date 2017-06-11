@@ -3,13 +3,13 @@
 
 #include "Skill.h"
 
-class FireBallSkill:public Skill {
+class FireballSkill:public Skill {
 public:
-	FireBallSkill();
-	~FireBallSkill();
+	FireballSkill();
+	~FireballSkill();
 
-	static FireBallSkill* create() {
-		FireBallSkill* pRet = new(std::nothrow) FireBallSkill();
+	static FireballSkill* create() {
+		FireballSkill* pRet = new(std::nothrow) FireballSkill();
 		if (pRet && pRet->init()) {
 			pRet->autorelease();
 			return pRet;

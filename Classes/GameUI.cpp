@@ -1,6 +1,6 @@
 #include "GameUI.h"
 #include "Common.h"
-#include "FireBallSkill.h"
+#include "FireballSkill.h"
 #include "ReinforcementSkill.h"
 
 GameUI::GameUI() {
@@ -37,7 +37,7 @@ bool GameUI::init() {
 	hud_bg->addChild(wave_label_);
 
 	// set skills
-	addSkill(FireBallSkill::create());
+	addSkill(FireballSkill::create());
 	addSkill(ReinforcementSkill::create());
 
 	scheduleUpdate();
