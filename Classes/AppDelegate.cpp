@@ -1,7 +1,6 @@
 #include "AppDelegate.h"
-#include "WelcomeScene.h"
-#include "Loading.h"
-#include "FightScene.h"
+#include "Scenes/WelcomeScene.h"
+#include "Common/Loading.h"
 
 USING_NS_CC;
 
@@ -73,10 +72,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	load.init();
 
 	// create a scene. it's an autorelease object
-	//auto scene = WelcomeScene::createScene();
-	auto scene = Scene::create();
-	auto layer = FightScene::create();
-	scene->addChild(layer);
+	auto scene = WelcomeScene::createScene();
 	// run
 	director->runWithScene(scene);
 
