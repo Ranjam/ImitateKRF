@@ -28,7 +28,7 @@ public:
 
 	void waveOver();
 
-	void loadLevelData();
+	void loadLevelData(int level);
 
 private:
 	BaseMap *map_;

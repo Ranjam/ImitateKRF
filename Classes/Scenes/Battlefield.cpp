@@ -4,6 +4,8 @@
 #include "UISprites/Stronghold.h"
 #include "UISprites/DefendFlag.h"
 #include "UISprites/WarningFlag.h"
+#include "Common/SoundManager.h"
+#include "Common/Resources.h"
 
 Battlefield::Battlefield() {
 }
@@ -31,7 +33,7 @@ bool Battlefield::init(int level) {
 	this->addChild(monster_layer_, Zorder::MONSTER_LAYER);
 
 	// load level data
-	loadLevelData();
+	loadLevelData(level);
 
 	// on moved
 	auto touch_move_listener = EventListenerTouchOneByOne::create();
@@ -88,12 +90,13 @@ void Battlefield::waveOver() {
 			this->addChild(warning_flag, 1, Tag::WARNING_FLAG + i);
 			warning_flag->start();
 		}
+		SoundManager::getInstance()->playEffect(s_effect_wave_ready);
 	}
 }
 
-void Battlefield::loadLevelData() {
+void Battlefield::loadLevelData(int level) {
 	// all level data
-	auto data_map = FileUtils::getInstance()->getValueMapFromFile("level_01_info.plist");
+	auto data_map = FileUtils::getInstance()->getValueMapFromFile(StringUtils::format("levels/level_%02d_info.plist", level));
 
 	// level base data
 	auto level_data = data_map.at("level_data").asValueMap();

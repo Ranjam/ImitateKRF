@@ -1,6 +1,8 @@
 #include "Loading.h"
 #include "Resources.h"
+#include "SimpleAudioEngine.h"
 
+using namespace CocosDenshion;
 
 Loading::Loading() {
 }

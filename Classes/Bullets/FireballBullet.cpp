@@ -1,6 +1,8 @@
 #include "FireballBullet.h"
 #include "Common/GameManager.h"
 #include "Scenes/MonsterLayer.h"
+#include "Common/SoundManager.h"
+#include "Common/Resources.h"
 
 
 FireballBullet::FireballBullet() {
@@ -39,6 +41,7 @@ bool FireballBullet::init() {
 									   CallFunc::create(CC_CALLBACK_0(Sprite::removeFromParent, shadow)),
 									   NULL));
 
+
 	return true;
 }
 
@@ -64,6 +67,7 @@ void FireballBullet::particleEffect(float dt) {
 }
 
 void FireballBullet::explode() {
+	SoundManager::getInstance()->playEffect(s_effect_fireball_explosion);
 	// fireball_explosion_00%02d.png
 	auto explosion = Sprite::createWithSpriteFrameName("fireball_explosion_0017.png");
 	this->addChild(explosion, 3);

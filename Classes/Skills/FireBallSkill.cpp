@@ -2,6 +2,8 @@
 #include "Bullets/FireballBullet.h"
 #include "Common/GameManager.h"
 #include "Scenes/Battlefield.h"
+#include "Common/Resources.h"
+#include "Common/SoundManager.h"
 
 FireballSkill::FireballSkill() {
 }
@@ -19,6 +21,7 @@ bool FireballSkill::init() {
 }
 
 void FireballSkill::execute(Touch* touch, Event* event) {
+	SoundManager::getInstance()->playEffect(s_effect_fireball_release);
 	this->origin_pos_ = GameManager::getInstance()->getBattlefield()->convertTouchToNodeSpace(touch);
 	schedule(schedule_selector(FireballSkill::Instantiate), 0.3f, 4, 0.5f);
 }

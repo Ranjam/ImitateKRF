@@ -1,5 +1,7 @@
 #include "BaseIcon.h"
 #include "../RingPanel.h"
+#include "Common/SoundManager.h"
+#include "Common/Resources.h"
 
 
 BaseIcon::BaseIcon() {
@@ -29,6 +31,7 @@ bool BaseIcon::init() {
 
 	click_listener->onTouchBegan = [=](Touch *touch, Event *event)->bool {
 		if (this->getBoundingBox().containsPoint(this->getParent()->convertTouchToNodeSpace(touch))) {
+			SoundManager::getInstance()->playEffect(s_effect_open_tower);
 			return true;
 		} else {
 			onCanceled();

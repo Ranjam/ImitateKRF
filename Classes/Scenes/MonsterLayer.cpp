@@ -2,6 +2,8 @@
 #include "MonsterLayer.h"
 #include "Monsters/DesertThug.h"
 #include "Common/GameManager.h"
+#include "Common/SoundManager.h"
+#include "Common/Resources.h"
 
 
 MonsterLayer::MonsterLayer() {
@@ -26,6 +28,7 @@ bool MonsterLayer::init() {
 
 void MonsterLayer::nextWave() {
 	if (wave_over_) {
+		SoundManager::getInstance()->playEffect(s_effect_wave_incoming);
 		schedule(schedule_selector(MonsterLayer::monsterIncoming), 1.0f);
 		wave_over_ = false;
 	}

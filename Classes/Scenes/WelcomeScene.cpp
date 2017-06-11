@@ -1,6 +1,8 @@
 #include "WelcomeScene.h"
 #include "Common/CommonMacro.h"
 #include "UI/WelcomeSlotMenu.h"
+#include "Common/SoundManager.h"
+#include "Common/Resources.h"
 
 Scene* WelcomeScene::createScene() {
     auto scene = Scene::create();
@@ -59,6 +61,10 @@ bool WelcomeScene::init() {
 	button_close_listener->onTouchEnded = [=](Touch *touch, Event *event) {
 		auto target = static_cast<Sprite*>(event->getCurrentTarget());
 		if (target->getBoundingBox().containsPoint(this->convertTouchToNodeSpace(touch))) {
+
+			// play effect
+			SoundManager::getInstance()->playEffect(s_effect_button_click);
+
 			target->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("mainmenu_saveslot_close_0001.png"));
 			auto start_button = this->getChildByTag(Tag::START_BUTTON);
 			slot_menu->runAction(MoveBy::create(0.3f, Vec2(0.0f, -winSize.height)));
@@ -71,19 +77,12 @@ bool WelcomeScene::init() {
 
 	this->_eventDispatcher->addEventListenerWithSceneGraphPriority(button_close_listener, button_close);
 
+	SoundManager::getInstance()->playMusic(s_music_welcome);
+
 	return true;
 }
 
 void WelcomeScene::logoAnimationCallback(float dt) {
-	//SpriteFrame *frame;
-	//Vector<SpriteFrame *> sprite_frames;
-	//for (int i = 1; i < 27; ++i) {
-	//	frame = SpriteFrameCache::getInstance()->getSpriteFrameByName(StringUtils::format("logo_brillo_00%02d.png", i));
-	//	if (frame != nullptr) {
-	//		sprite_frames.pushBack(frame);
-	//	}
-	//}
-	//auto animation = Animation::createWithSpriteFrames(sprite_frames, 0.1f);
 	auto sprite_logo_brillo = Sprite::createWithSpriteFrameName("logo_brillo_0001.png");
 	sprite_logo_brillo->setPosition(winSize.width / 2.0f, winSize.height - sprite_logo_brillo->getContentSize().height / 2.0f);
 	this->addChild(sprite_logo_brillo, Zorder::LOGO);
@@ -115,6 +114,9 @@ void WelcomeScene::startButtonAnimationCallback(float dt) {
 
 	// on clicked start button
 	button_start_event_listener->onTouchEnded = [&](Touch *touch, Event *event)->void {
+
+		SoundManager::getInstance()->playEffect(s_effect_button_click);
+
 		auto target = static_cast<Sprite*>(event->getCurrentTarget());
 		Point locationInNode = target->convertTouchToNodeSpace(touch);
 		Size size = target->getContentSize();

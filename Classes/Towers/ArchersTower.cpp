@@ -4,6 +4,8 @@
 #include "UISprites/RangeCircle.h"
 #include "Common/GameManager.h"
 #include "Scenes/MonsterLayer.h"
+#include "Common/SoundManager.h"
+#include "Common/Resources.h"
 
 const float ArchersTower::kArcherTowerLv1Scope = 150.0f;
 const float ArchersTower::kArcherTowerLv2Scope = 200.0f;
@@ -80,6 +82,7 @@ void ArchersTower::attack(float dt) {
 		archer->runAction(Sequence::create(archer_animate,
 										   CallFunc::create([=]() 
 		{
+			SoundManager::getInstance()->playEffect(current_archer_ == 0 ? s_effect_arrow_release1 : s_effect_arrow_release2);
 			arrow->setVisible(true);
 			arrow->shootBy(relative_archer, 150.0f, 0.5f, CallFunc::create([=]() {
 
@@ -91,6 +94,7 @@ void ArchersTower::attack(float dt) {
 										   arrow->getContentSize().height);
 					// if arrow hit monster
 					if (monster->getImage()->getBoundingBox().intersectsRect(arrow_rect)) {
+						SoundManager::getInstance()->playEffect(current_archer_ == 0 ? s_effect_arrow_hit1 : s_effect_arrow_hit2);
 						monster->getDamage(this->power_);
 						arrow->removeFromParentAndCleanup(true);
 						return;
@@ -107,21 +111,6 @@ void ArchersTower::attack(float dt) {
 			}));
 		}),
 										   NULL));
-
-		// if you want shoot arrow at the same time with pull the bow
-		//arrow->shootBy(relative_tower, 150.0f, 0.8f, CallFunc::create([=]() {
-		//	if (nearest_monster_->getBoundingBox().intersectsRect(arrow->getBoundingBox())) {
-		//	} else {
-		//		// if not hit
-		//		arrow->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("decal_arrow.png"));
-		//		arrow->runAction(Sequence::create(
-		//			DelayTime::create(1.0f),
-		//			FadeOut::create(0.3f),
-		//			CallFunc::create(CC_CALLBACK_0(ArrowBullet::removeFromParentAndCleanup, arrow, true)),
-		//			NULL)
-		//		);
-		//	}
-		//}));
 
 		// change the archer
 		current_archer_ = current_archer_ == 0 ? 1 : 0;
@@ -144,6 +133,9 @@ void ArchersTower::hideTowerInfo() {
 
 // play building animation
 void ArchersTower::buildingAnimation() {
+
+	SoundManager::getInstance()->playEffect(s_effect_tower_building);
+
 	auto constructing = Sprite::create();
 	// the preview ruin of building
 	auto ruin = Sprite::createWithSpriteFrameName("tower_constructing_0004.png");
@@ -164,12 +156,13 @@ void ArchersTower::buildingAnimation() {
 	this->addChild(constructing, 1);
 
 	// todo: why can not remove the last animation
-	buildingbar->runAction(Sequence::create(ProgressTo::create(1.0f, 100)
+	buildingbar->runAction(Sequence::create(ProgressTo::create(1.5f, 100)
 										  , CallFunc::create(CC_CALLBACK_0(Sprite::removeFromParentAndCleanup, constructing, true))
 									      , CallFunc::create(CC_CALLBACK_0(ArchersTower::buildingSmokeAnimation, this)), NULL));
 }
 
 void ArchersTower::buildingSmokeAnimation() {
+	SoundManager::getInstance()->playEffect(s_archers_ready);
 	// smoke effect
 	auto smoke = Sprite::createWithSpriteFrameName("effect_buildSmoke_0001.png");
 	this->addChild(smoke, 1);

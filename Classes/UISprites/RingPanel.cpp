@@ -1,4 +1,6 @@
 #include "RingPanel.h"
+#include "Common/SoundManager.h"
+#include "Common/Resources.h"
 
 
 RingPanel::RingPanel() {
@@ -19,6 +21,7 @@ bool RingPanel::init() {
 }
 
 void RingPanel::show() {
+	SoundManager::getInstance()->playEffect(s_effect_open_tower);
 	this->setVisible(true);
 	this->runAction(ScaleTo::create(0.2f, 1.0f));
 	is_shown_ = true;

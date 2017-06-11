@@ -1,6 +1,8 @@
 #include "WelcomeSlotMenu.h"
 #include "Common/CommonMacro.h"
 #include "Scenes/FightScene.h"
+#include "Common/SoundManager.h"
+#include "Common/Resources.h"
 
 
 WelcomeSlotMenu::WelcomeSlotMenu() {
@@ -142,6 +144,9 @@ void WelcomeSlotMenu::showSelect(Tag slot_tag) {
 	yes_listener->onTouchEnded = [=](Touch *touch, Event *event) {
 		auto target = static_cast<Sprite *>(event->getCurrentTarget());
 		if (target->getBoundingBox().containsPoint(this->convertTouchToNodeSpace(touch))) {
+
+			SoundManager::getInstance()->playEffect(s_effect_button_click);
+
 			target->setScale(1.0f);
 			this->removeChild(select_no, true);
 			this->removeChild(target, true);
@@ -164,6 +169,9 @@ void WelcomeSlotMenu::showSelect(Tag slot_tag) {
 	no_listener->onTouchEnded = [=](Touch *touch, Event *event) {
 		auto target = static_cast<Sprite *>(event->getCurrentTarget());
 		if (target->getBoundingBox().containsPoint(this->convertTouchToNodeSpace(touch))) {
+
+			SoundManager::getInstance()->playEffect(s_effect_button_click);
+
 			target->setScale(1.0f);
 			this->removeChild(select_yes, true);
 			this->removeChild(target, true);
@@ -187,6 +195,9 @@ void WelcomeSlotMenu::bindEventOneByOne(Tag slot_tag) {
 
 	// Enter FightScene
 	slot_listener->onTouchEnded = [=](Touch *touch, Event *event) {
+
+		SoundManager::getInstance()->playEffect(s_effect_button_click);
+
 		sprite_slot->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("mainmenu_saveslot_0001.png"));
 		auto scene = FightScene::createScene(1);
 		Director::getInstance()->replaceScene(TransitionPageTurn::create(2.5f, scene, false));
@@ -205,6 +216,9 @@ void WelcomeSlotMenu::bindDeleteEvent(Tag slot_tag) {
 		return false;
 	};
 	button_delete_listener->onTouchEnded = [=](Touch *touch, Event *event) {
+
+		SoundManager::getInstance()->playEffect(s_effect_button_click);
+
 		button_delete->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("mainmenu_saveslot_delete_0001.png"));
 		showSelect(slot_tag);
 		this->removeChild(button_delete, true);

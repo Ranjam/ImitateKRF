@@ -2,7 +2,6 @@
 #define __GAME_MANAGER_H__
 
 #include "cocos2d.h"
-#include "Monsters/Monster.h"
 
 USING_NS_CC;
 
@@ -15,10 +14,6 @@ public:
 		static GameManager instance;
 		return &instance;
 	}
-
-	//Vector<Monster *> &getMonsters() {
-	//	return monsters_;
-	//}
 
 private:
 	GameManager();
