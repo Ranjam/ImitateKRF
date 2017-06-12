@@ -48,7 +48,7 @@ bool WarningFlag::init() {
 			is_selected_ = true;
 			selected_->setVisible(true);
 		} else {
-			this->stop();
+			static_cast<Battlefield *>(this->getParent())->nextWave();
 		}
 	};
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(select_listener, flag_bg);
@@ -82,15 +82,12 @@ void WarningFlag::stop() {
 	this->is_over_ = true;
 	this->stopAllActions();
 	unschedule(schedule_selector(WarningFlag::updateProgress));
-	
-	// next monster wave
-	static_cast<Battlefield *>(this->getParent())->nextWave();
 }
 
 void WarningFlag::updateProgress(float dt) {
 	progressTimer_->setPercentage(progressTimer_->getPercentage() + 0.1f);
 	if (progressTimer_->getPercentage() >= 100) {
-		this->stop();
+		static_cast<Battlefield *>(this->getParent())->nextWave();
 	}
 }
 

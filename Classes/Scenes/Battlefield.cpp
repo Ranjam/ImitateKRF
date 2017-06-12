@@ -73,8 +73,8 @@ bool Battlefield::init(int level) {
 }
 
 void Battlefield::nextWave() {
-	for (int i = 0; i < warning_flags_info_.size(); ++i) {
-		this->removeChildByTag(Tag::WARNING_FLAG + i);
+	for (int i = 0; i < warning_flags_.size(); ++i) {
+		warning_flags_.at(i)->stop();
 	}
 	if (GameManager::getInstance()->getCurrentWave() != GameManager::getInstance()->getWaveCount()) {
 		GameManager::getInstance()->setCurrentWave(GameManager::getInstance()->getCurrentWave() + 1);
@@ -84,11 +84,8 @@ void Battlefield::nextWave() {
 
 void Battlefield::waveOver() {
 	if (GameManager::getInstance()->getCurrentWave() != GameManager::getInstance()->getWaveCount()) {
-		for (int i = 0; i < warning_flags_info_.size(); ++i) {
-			auto warning_flag = WarningFlag::create();
-			warning_flag->setPosition(warning_flags_info_.at(i));
-			this->addChild(warning_flag, 1, Tag::WARNING_FLAG + i);
-			warning_flag->start();
+		for (int i = 0; i < warning_flags_.size(); ++i) {
+			warning_flags_.at(i)->start();
 		}
 		SoundManager::getInstance()->playEffect(s_effect_wave_ready);
 	}
@@ -120,10 +117,10 @@ void Battlefield::loadLevelData(int level) {
 	for (auto i = 0; i < level_warning_flags.size(); ++i) {
 		auto info = level_warning_flags.at(i).asValueMap();
 		Vec2 pos = Vec2(info.at("x").asFloat(), info.at("y").asFloat());
-		this->warning_flags_info_.push_back(pos);
 		auto warning_flag = WarningFlag::create();
 		warning_flag->setPosition(pos);
-		this->addChild(warning_flag, 1, Tag::WARNING_FLAG + i);
+		this->addChild(warning_flag, 1);
+		this->warning_flags_.push_back(warning_flag);
 	}
 
 	// stronghold

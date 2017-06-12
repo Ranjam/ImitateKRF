@@ -4,7 +4,7 @@
 using namespace CocosDenshion;
 
 void SoundManager::playMusic(const char *file_name, bool loop) {
-	SimpleAudioEngine::getInstance()->setBackgroundMusicVolume(0.1);
+	SimpleAudioEngine::getInstance()->setBackgroundMusicVolume(0.01);
 	SimpleAudioEngine::getInstance()->playBackgroundMusic(file_name, loop);
 }
 

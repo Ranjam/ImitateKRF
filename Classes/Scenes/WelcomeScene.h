@@ -14,6 +14,7 @@ public:
 	void logoAnimationCallback(float dt);
 
 	void startButtonAnimationCallback(float dt);
+	void creditsButtonAnimationCallback();
 
 	void setSaveSlotMenu();
 
@@ -29,11 +30,12 @@ public:
 
 private:
 	enum Tag {
-		START_BUTTON, CLOSE_BUTTON, SLOT_MENU
+		START_BUTTON, CREDITS_BUTTON, CLOSE_BUTTON, SLOT_MENU
 	};
 
 	enum Zorder {
-		BACKGROUND = -1,
+		BACKGROUND = -2,
+		CREDITS = -1,
 		START = 0,
 		SIMPLE_UI = 1,
 		LOGO = 2

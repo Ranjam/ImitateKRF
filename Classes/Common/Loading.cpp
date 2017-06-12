@@ -22,6 +22,7 @@ bool Loading::init() {
 }
 
 void Loading::loadingAssets() {
+	SpriteFrameCache::getInstance()->addSpriteFramesWithFile(s_credits_sprite);
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile(s_in_game_gui_plist);
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile(s_common_sprite_sheet);
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile(s_mainmenu_spritesheet);

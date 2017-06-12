@@ -3,6 +3,7 @@
 #include "UI/WelcomeSlotMenu.h"
 #include "Common/SoundManager.h"
 #include "Common/Resources.h"
+#include "CreditsScene.h"
 
 Scene* WelcomeScene::createScene() {
     auto scene = Scene::create();
@@ -34,7 +35,7 @@ bool WelcomeScene::init() {
 
 	// start button
 	scheduleOnce(schedule_selector(WelcomeScene::startButtonAnimationCallback), 0.5f);
-	
+
 	// logo animation
 	scheduleOnce(schedule_selector(WelcomeScene::logoAnimationCallback), 0.5f);
 
@@ -66,12 +67,9 @@ bool WelcomeScene::init() {
 			SoundManager::getInstance()->playEffect(s_effect_button_click);
 
 			target->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("mainmenu_saveslot_close_0001.png"));
-			auto start_button = this->getChildByTag(Tag::START_BUTTON);
 			slot_menu->runAction(MoveBy::create(0.3f, Vec2(0.0f, -winSize.height)));
 			target->runAction(MoveBy::create(0.3f, Vec2(0.0f, -winSize.height)));
-			start_button->setVisible(true);
-			start_button->runAction(MoveBy::create(0.5f, Vec2(0.0f, -200.0f)));
-			this->_eventDispatcher->resumeEventListenersForTarget(start_button);
+			startButtonAnimationCallback(0.16f);
 		}
 	};
 
@@ -92,10 +90,12 @@ void WelcomeScene::logoAnimationCallback(float dt) {
 void WelcomeScene::startButtonAnimationCallback(float dt) {
 	// Start button
 	auto button_start = Sprite::createWithSpriteFrameName("menu_startchain_0001.png");
-	button_start->setPosition(winSize.width / 2.0f, winSize.height / 2.0f + button_start->getContentSize().height / 2.0f);
+	button_start->setPosition(winSize.width / 2.0f - 5.0f, winSize.height / 2.0f + button_start->getContentSize().height / 2.0f);
 	button_start->setTag(Tag::START_BUTTON);
 	this->addChild(button_start, Zorder::START);
-	button_start->runAction(MoveTo::create(1.0f, Vec2(winSize.width / 2.0f, winSize.height / 2.0f - button_start->getContentSize().height / 6.0f)));
+	button_start->runAction(Sequence::create(MoveTo::create(0.8f, Vec2(winSize.width / 2.0f - 5.0f, winSize.height / 2.0f - button_start->getContentSize().height / 6.0f)),
+											 CallFunc::create(CC_CALLBACK_0(WelcomeScene::creditsButtonAnimationCallback, this)),
+											 NULL));
 
 	// button event
 	auto button_start_event_listener = EventListenerTouchOneByOne::create();
@@ -126,11 +126,46 @@ void WelcomeScene::startButtonAnimationCallback(float dt) {
 			target->runAction(MoveBy::create(0.3f, Vec2(0.0f, 200.0f)));
 			target->setVisible(false);
 			this->_eventDispatcher->pauseEventListenersForTarget(target);
+			this->removeChildByTag(Tag::START_BUTTON);
+			this->removeChildByTag(Tag::CREDITS_BUTTON);
 			setSaveSlotMenu();
 		}
 	};
 
 	this->_eventDispatcher->addEventListenerWithSceneGraphPriority(button_start_event_listener, button_start);
+}
+
+void WelcomeScene::creditsButtonAnimationCallback() {
+	auto start_button = this->getChildByTag(Tag::START_BUTTON);
+	// credits button
+	auto button_credits = Sprite::createWithSpriteFrameName("menu_creditschain_0001.png");
+	button_credits->setPosition(start_button->getPosition().x - 5.0f, start_button->getPosition().y - 80);
+	button_credits->setTag(Tag::CREDITS_BUTTON);
+	this->addChild(button_credits, Zorder::CREDITS);
+	button_credits->runAction(MoveTo::create(0.5f, Vec2(start_button->getPosition().x - 5.0f, start_button->getPosition().y - button_credits->getContentSize().height)));
+
+	// button event
+	auto credits_listener = EventListenerTouchOneByOne::create();
+
+	credits_listener->onTouchBegan = [=](Touch *touch, Event *event)->bool {
+		if (button_credits->getBoundingBox().containsPoint(this->convertTouchToNodeSpace(touch))) {
+			button_credits->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("menu_creditschain_0002.png"));
+			return true;
+		}
+		return false;
+	};
+
+	// on clicked start button
+	credits_listener->onTouchEnded = [=](Touch *touch, Event *event)->void {
+
+		SoundManager::getInstance()->playEffect(s_effect_button_click);
+		button_credits->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("menu_creditschain_0001.png"));
+
+		auto credit_scene = CreditsScene::createScene();
+		Director::getInstance()->replaceScene(TransitionFadeBL::create(0.5f, credit_scene));
+	};
+
+	this->_eventDispatcher->addEventListenerWithSceneGraphPriority(credits_listener, button_credits);
 }
 
 void WelcomeScene::setSaveSlotMenu() {

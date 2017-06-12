@@ -4,6 +4,7 @@
 #include "cocos2d.h"
 #include "BaseMap.h"
 #include "MonsterLayer.h"
+#include "UISprites/WarningFlag.h"
 
 USING_NS_CC;
 
@@ -33,12 +34,9 @@ public:
 private:
 	BaseMap *map_;
 	MonsterLayer *monster_layer_;
-	std::vector<Vec2> warning_flags_info_;
+	std::vector<WarningFlag *> warning_flags_;
 
 private:
-	enum Tag {
-		WARNING_FLAG = 0
-	};
 	enum Zorder {
 		MAP = -1,
 		MONSTER_LAYER = 1

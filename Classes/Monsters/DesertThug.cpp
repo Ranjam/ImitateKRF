@@ -1,4 +1,6 @@
 #include "DesertThug.h"
+#include "Common/SoundManager.h"
+#include "Common/Resources.h"
 
 DesertThug::DesertThug() {
 }
@@ -85,6 +87,9 @@ void DesertThug::setState(MonsterState state) {
 }
 
 void DesertThug::dying() {
+	int rand = RandomHelper::random_int(1, 4);
+	SoundManager::getInstance()->playEffect(StringUtils::format(s_human_dead, rand).c_str());
+
 	this->image_->stopAllActions();
 	this->stopAllActions();
 	this->hp_bg_->setVisible(false);

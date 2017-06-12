@@ -43,7 +43,7 @@ void ArchersTower::attack(float dt) {
 
 	this->checkNearestMonster();
 
-	if (nearest_monster_ != nullptr) {
+	if (nearest_monster_ != nullptr && building_complete_) {
 		Monster *target_monster = this->nearest_monster_;
 		auto arrow = ArrowBullet::create();
 		this->addChild(arrow);
@@ -190,6 +190,8 @@ void ArchersTower::initTower(int level) {
 	this->archer_right_ = Sprite::createWithSpriteFrameName(StringUtils::format("tower_archer_lvl%d_shooter_0001.png", level));
 	archer_right_->setPosition(Vec2(10.0f, 18.0f));
 	this->addChild(archer_right_);
+
+	this->building_complete_ = true;
 
 	// add listener
 	this->addTouchListener();

@@ -44,6 +44,7 @@ private:
 	Sprite *archer_right_ = nullptr;
 	int current_archer_ = 0;
 	bool info_is_shown = false;
+	bool building_complete_ = false;
 
 public:
 	static const float kArcherTowerLv1Scope;
