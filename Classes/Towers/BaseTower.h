@@ -10,24 +10,25 @@ class BaseTower: public Sprite {
 
 public:
 	enum TowerType {
-		ARCHER, MILITIA, MAGE, BOMBARD, UNDEFINED
+		ARCHER, BARRACK, MAGE, ARTILLERY, UNDEFINED
 	};
 
 public:
-	explicit BaseTower(TowerType type = UNDEFINED, 
-			  std::string name = "", 
-			  int level = 0,
-			  float scope = 0,
-			  float next_scope = 0,
-			  float rate = 0,
-			  float power = 0,
-			  int upgrade_price = 0,
-			  int selling_price = 0,
-			  Monster *nearest_monster = nullptr);
+	explicit BaseTower(
+		TowerType type = UNDEFINED,
+		std::string name = "",
+		int level = 0,
+		float scope = 0,
+		float next_scope = 0,
+		float rate = 0,
+		float power = 0,
+		int upgrade_price = 0,
+		int selling_price = 0,
+		Monster *nearest_monster = nullptr
+	);
 	~BaseTower();
 
 	bool init() override;
-
 
 private:
 	// tower type

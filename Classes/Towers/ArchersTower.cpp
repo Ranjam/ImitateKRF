@@ -200,6 +200,8 @@ void ArchersTower::initTower(int level) {
 void ArchersTower::addTouchListener() {
 	auto touch_listener = EventListenerTouchOneByOne::create();
 
+	touch_listener->setSwallowTouches(true);
+
 	touch_listener->onTouchBegan = [=](Touch *touch, Event *event)->bool {
 		if (this->tower_base_->getBoundingBox().containsPoint(this->convertTouchToNodeSpace(touch))) {
 			this->showTowerInfo();

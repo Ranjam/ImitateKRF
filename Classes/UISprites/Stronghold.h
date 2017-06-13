@@ -9,6 +9,10 @@
 USING_NS_CC;
 
 class Stronghold: public Sprite {
+private:
+	enum Zorder {
+		BACKGROUND, TOWER, RANGE_CIRCLE, RING_PANEL
+	};
 public:
 	Stronghold();
 	~Stronghold();
@@ -33,19 +37,9 @@ public:
 
 	void removeTower();
 
-	void addRangeCircle(RangeCircle::RangeType type, float scope) {
-		if (!range_circle_added_) {
-			this->addChild(RangeCircle::create(type, scope), -1, 999);
-			range_circle_added_ = true;
-		}
-	}
+	void addRangeCircle(RangeCircle::RangeType type, float scope);
 
-	void removeRangeCircle() {
-		if (range_circle_added_) {
-			this->removeChildByTag(999, true);
-			range_circle_added_ = false;
-		}
-	}
+	void removeRangeCircle();
 
 private:
 	// stronghold background

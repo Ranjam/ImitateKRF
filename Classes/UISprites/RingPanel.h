@@ -2,7 +2,7 @@
 #define __RING_PANEL_H__
 
 #include "cocos2d.h"
-#include "Icon/BaseIcon.h"
+#include "BaseIcon.h"
 
 USING_NS_CC;
 
@@ -24,6 +24,8 @@ public:
 	}
 
 	void addIcon(BaseIcon *icon, float x, float y);
+
+	void cancelAllIconClick();
 
 	void clearIcons();
 

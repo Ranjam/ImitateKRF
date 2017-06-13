@@ -1,7 +1,6 @@
 #include "Stronghold.h"
-#include "Icon/ArchersTowerIcon.h"
 #include "Towers/ArchersTower.h"
-
+#include "Towers/BarrackTower.h"
 
 Stronghold::Stronghold() {
 }
@@ -16,21 +15,21 @@ bool Stronghold::init() {
 	}
 	// terrain
 	image_ = Sprite::createWithSpriteFrameName("build_terrain_0004.png");
-	this->addChild(image_, -1);
+	this->addChild(image_, Zorder::BACKGROUND);
 	
 	// ring panel
 	ring_panel_ = RingPanel::create();
-	this->addChild(ring_panel_);
+	this->addChild(ring_panel_, Zorder::RING_PANEL);
 	ring_panel_->setScale(0.0f);
 	ring_panel_->hide();
 
 	// adjust the position
 	float t = sqrt(2.0f) / 4.0f;
 	float p = 1.0f / 2;
-	ring_panel_->addIcon(ArchersTowerIcon::create(), (p - t) * ring_panel_->getContentSize().width, (p + t) * ring_panel_->getContentSize().height);
-	ring_panel_->addIcon(BaseIcon::create(), (p + t) * ring_panel_->getContentSize().width, (p + t) * ring_panel_->getContentSize().height);
-	ring_panel_->addIcon(BaseIcon::create(), (p - t) * ring_panel_->getContentSize().width, (p - t) * ring_panel_->getContentSize().height);
-	ring_panel_->addIcon(BaseIcon::create(), (p + t) * ring_panel_->getContentSize().width, (p - t) * ring_panel_->getContentSize().height);
+	ring_panel_->addIcon(BaseIcon::create(BaseIcon::IconType::ARCHERS_TOWER), (p - t) * ring_panel_->getContentSize().width, (p + t) * ring_panel_->getContentSize().height);
+	ring_panel_->addIcon(BaseIcon::create(BaseIcon::IconType::BARRACK_TOWER), (p + t) * ring_panel_->getContentSize().width, (p + t) * ring_panel_->getContentSize().height);
+	ring_panel_->addIcon(BaseIcon::create(BaseIcon::IconType::NONE), (p - t) * ring_panel_->getContentSize().width, (p - t) * ring_panel_->getContentSize().height);
+	ring_panel_->addIcon(BaseIcon::create(BaseIcon::IconType::NONE), (p + t) * ring_panel_->getContentSize().width, (p - t) * ring_panel_->getContentSize().height);
 
 	// terrain click
 	auto click_listener = EventListenerTouchOneByOne::create();
@@ -57,28 +56,27 @@ bool Stronghold::init() {
 }
 
 void Stronghold::showPreview(BaseTower::TowerType tower_type) {
-	// hide last preview
-	hidePreview();
-
 	// add preview
 	switch (tower_type) {
 		case BaseTower::ARCHER:
 			preview_ = Sprite::createWithSpriteFrameName("tower_preview_archer.png");
+			addRangeCircle(RangeCircle::RANGE, ArchersTower::kArcherTowerLv1Scope);
 			break;
-		case BaseTower::MILITIA:
+		case BaseTower::BARRACK:
 			preview_ = Sprite::createWithSpriteFrameName("tower_preview_barrack.png");
+			addRangeCircle(RangeCircle::RALLY, BarrackTower::kBarrackTowerLv1Scope);
 			break;
 		case BaseTower::MAGE: 
 			preview_ = Sprite::createWithSpriteFrameName("tower_preview_mage.png");
 			break;
-		case BaseTower::BOMBARD: 
+		case BaseTower::ARTILLERY: 
 			preview_ = Sprite::createWithSpriteFrameName("tower_preview_artillery.png");
 			break;
-		default: ;
+		case BaseTower::UNDEFINED: break;
 	}
 	if (preview_ != nullptr) {
 		preview_->setPosition(0.0f, 25.0f);
-		this->addChild(preview_, 1);
+		this->addChild(preview_, Zorder::TOWER);
 	}
 }
 
@@ -86,6 +84,7 @@ void Stronghold::hidePreview() {
 	if (preview_ != nullptr) {
 		this->removeChild(preview_, true);
 	}
+	removeRangeCircle();
 }
 
 void Stronghold::buildTower(BaseTower::TowerType tower_type) {
@@ -93,14 +92,16 @@ void Stronghold::buildTower(BaseTower::TowerType tower_type) {
 		case BaseTower::ARCHER:
 			tower_ = ArchersTower::create();
 			break;
-		case BaseTower::MILITIA: break;
+		case BaseTower::BARRACK: 
+			tower_ = BarrackTower::create();
+			break;
 		case BaseTower::MAGE: break;
-		case BaseTower::BOMBARD: break;
+		case BaseTower::ARTILLERY: break;
 		case BaseTower::UNDEFINED: break;
 		default: ;
 	}
 	if (tower_ != nullptr) {
-		this->addChild(tower_);
+		this->addChild(tower_, Zorder::TOWER);
 		tower_->setPosition(0.0f, 25.0f);
 
 		// pause the event listener
@@ -114,4 +115,18 @@ void Stronghold::removeTower() {
 
 	// resume the event listener
 	_eventDispatcher->resumeEventListenersForTarget(image_);
+}
+
+void Stronghold::addRangeCircle(RangeCircle::RangeType type, float scope) {
+	if (!range_circle_added_) {
+		this->addChild(RangeCircle::create(type, scope), Zorder::RANGE_CIRCLE, 999);
+		range_circle_added_ = true;
+	}
+}
+
+void Stronghold::removeRangeCircle() {
+	if (range_circle_added_) {
+		this->removeChildByTag(999, true);
+		range_circle_added_ = false;
+	}
 }
