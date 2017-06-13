@@ -69,6 +69,34 @@ void Loading::loadingAnimations() {
 	AnimationCache::getInstance()->addAnimation(createAnimation("effect_buildSmoke_00%02d.png", 1, 10, 0.1f),
 												"building_smoke_effect");
 
+	// reinforce A0 move
+	AnimationCache::getInstance()->addAnimation(createAnimation("reinforce_A0_00%02d.png", 1, 6, 0.1f),
+												"reinforce_A0_move");
+
+	// reinforce A0 attack
+	AnimationCache::getInstance()->addAnimation(createAnimation("reinforce_A0_00%02d.png", 6, 7, 0.5f),
+												"reinforce_A0_attack");
+
+	// reinforce_A1 move
+	AnimationCache::getInstance()->addAnimation(createAnimation("reinforce_A1_00%02d.png", 1, 6, 0.1f),
+												"reinforce_A1_move");
+
+	// reinforce_A1 attack
+	AnimationCache::getInstance()->addAnimation(createAnimation("reinforce_A1_00%02d.png", 7, 11, 0.1f),
+												"reinforce_A1_attack");
+
+	// reinforce_A3_ move
+	AnimationCache::getInstance()->addAnimation(createAnimation("reinforce_A3_00%02d.png", 1, 6, 0.1f),
+												"reinforce_A3_move");
+
+	// reinforce_A3_ attack
+	AnimationCache::getInstance()->addAnimation(createAnimation("reinforce_A3_00%02d.png", 7, 24, 0.05f),
+												"reinforce_A3_attack");
+
+	// reinforce_A3_ arrow
+	AnimationCache::getInstance()->addAnimation(createAnimation("reinforce_A3_00%02d.png", 25, 36, 0.05f),
+												"reinforce_A3_arrow");
+
 	// archers tower lvx atack down
 	Animation *animation;
 	// lv1

@@ -61,6 +61,7 @@ void ArchersTower::attack(float dt) {
 
 		// monster relative to the archer
 		Vec2 relative_archer = this->convertToNodeSpace(target_monster->getParent()->convertToWorldSpace(target_monster->getPosition())) - archer->getPosition();
+		relative_archer.y += target_monster->getImage()->getContentSize().height / 2;
 
 		// if the monster on the left
 		if (relative_tower.x <= 0) {

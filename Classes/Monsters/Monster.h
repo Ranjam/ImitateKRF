@@ -14,8 +14,7 @@ public:
 		WALK_DOWN,
 		ATTACK_LEFT,
 		ATTACK_RIGHT,
-		STAND,
-		DEAD
+		STOP
 	};
 public:
 	Monster();

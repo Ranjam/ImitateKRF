@@ -26,16 +26,15 @@ void Monster::keepGoing() {
 
 	if (current_target_point_ < path_.size() && this->getPosition() != path_[current_target_point_]) {
 
-		float dx = path_[current_target_point_].x - this->getPosition().x;
-		float dy = path_[current_target_point_].y - this->getPosition().y;
+		auto relative = path_[current_target_point_] - this->getPosition();
 
-		if (fabs(dy) > fabs(dx) && dy > 0) {
+		if (fabs(relative.y) > fabs(relative.x) && relative.y > 0) {
 			// up
 			setState(MonsterState::WALK_UP);
-		} else if (fabs(dy) > fabs(dx) && dy < 0) {
+		} else if (fabs(relative.y) > fabs(relative.x) && relative.y < 0) {
 			// down
 			setState(MonsterState::WALK_DOWN);
-		} else if (dx < 0) {
+		} else if (relative.x < 0) {
 			// left
 			setState(MonsterState::WALK_LEFT);
 		} else {

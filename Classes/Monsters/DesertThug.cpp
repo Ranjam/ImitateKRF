@@ -20,10 +20,11 @@ bool DesertThug::init(int type, const std::vector<Vec2> &path) {
 	}
 
 	image_ = Sprite::createWithSpriteFrameName("desertThug_0067.png");
+	image_->setAnchorPoint(Vec2(0.5, 0));
 	this->addChild(image_, -1);
 	
 	hp_bg_ = Sprite::createWithSpriteFrameName("lifebar_bg_small.png");
-	hp_bg_->setPosition(0.0f, 25.0f);
+	hp_bg_->setPosition(0.0f, 40.0f);
 	this->addChild(hp_bg_, 0);
 
 	hp_prog_ = ProgressTimer::create(Sprite::createWithSpriteFrameName("lifebar_small.png"));
@@ -31,7 +32,7 @@ bool DesertThug::init(int type, const std::vector<Vec2> &path) {
 	hp_prog_->setMidpoint(Vec2(0.0f, 0.5f));
 	hp_prog_->setScaleY(1.5f);
 	hp_prog_->setPercentage(100.0f);
-	hp_prog_->setPosition(0.0f, 25.0f);
+	hp_prog_->setPosition(0.0f, 40.0f);
 	this->addChild(hp_prog_, 1);
 
 	return true;
@@ -42,45 +43,39 @@ void DesertThug::update(float dt) {
 }
 
 void DesertThug::setState(MonsterState state) {
+	this->state_ = state;
 	this->image_->stopActionByTag(0);
 	Action *animationAct;
 	switch (state) {
 
-	case WALK_LEFT: {
+	case WALK_LEFT:
 		this->image_->setFlippedX(true);
 		animationAct = RepeatForever::create(Animate::create(AnimationCache::getInstance()->getAnimation("desert_thug_move_forward")));
 		break;
-	}
-	case WALK_RIGHT: {
+	case WALK_RIGHT:
 		this->image_->setFlippedX(false);
 		animationAct = RepeatForever::create(Animate::create(AnimationCache::getInstance()->getAnimation("desert_thug_move_forward")));
 		break;
-	}
-	case WALK_UP: {
+	case WALK_UP:
 		this->image_->setFlippedX(false);
 		animationAct = RepeatForever::create(Animate::create(AnimationCache::getInstance()->getAnimation("desert_thug_move_up")));
 		break;
-	}
-	case WALK_DOWN: {
+	case WALK_DOWN:
 		this->image_->setFlippedX(false);
 		animationAct = RepeatForever::create(Animate::create(AnimationCache::getInstance()->getAnimation("desert_thug_move_down")));
 		break;
-	}
-	case ATTACK_LEFT: {
+	case ATTACK_LEFT:
 		this->image_->setFlippedX(true);
 		animationAct = RepeatForever::create(Animate::create(AnimationCache::getInstance()->getAnimation("desert_thug_attack")));
 		break;
-	}
-	case ATTACK_RIGHT: {
+	case ATTACK_RIGHT:
 		this->image_->setFlippedX(false);
 		animationAct = RepeatForever::create(Animate::create(AnimationCache::getInstance()->getAnimation("desert_thug_attack")));
 		break;
-	}
-		case STAND: ;
-		default:
-		{
-			animationAct = nullptr;
-		}
+	case STOP:
+		this->stopAllActions();
+		animationAct = RepeatForever::create(Animate::create(AnimationCache::getInstance()->getAnimation("desert_thug_stand")));
+		break;
 	}
 	animationAct->setTag(0);
 	image_->runAction(animationAct);

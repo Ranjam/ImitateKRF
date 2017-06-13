@@ -6,6 +6,7 @@
 #include "UISprites/WarningFlag.h"
 #include "Common/SoundManager.h"
 #include "Common/Resources.h"
+#include "Heros/Soldier.h"
 
 Battlefield::Battlefield() {
 }
@@ -19,6 +20,10 @@ bool Battlefield::init(int level) {
 	if (!Layer::init()) {
 		return false;
 	}
+
+	/*auto reinforce = Soldier::create();
+	reinforce->setPosition(900, winSize.height / 2 + 180);
+	this->addChild(reinforce, 999);*/
 
 	// map
 	map_ = BaseMap::create(level);
