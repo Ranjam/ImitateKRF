@@ -5,12 +5,16 @@
 
 class Soldier: public Human {
 public:
+	enum ReinforceType {
+		A, B, C
+	};
+public:
 	Soldier();
 	~Soldier();
 
-	static Soldier* create() {
+	static Soldier* create(ReinforceType type) {
 		auto pRet = new(std::nothrow) Soldier();
-		if (pRet && pRet->init()) {
+		if (pRet && pRet->init(type)) {
 			pRet->autorelease();
 			return pRet;
 		}
@@ -18,10 +22,13 @@ public:
 		return nullptr;
 	}
 
-	bool init() override;
+	bool init(ReinforceType type);
 
 	void chase(float dt);
 	void attack(float dt);
+
+private:
+	std::string name_;
 };
 
 #endif

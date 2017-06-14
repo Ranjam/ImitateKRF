@@ -97,6 +97,30 @@ void Loading::loadingAnimations() {
 	AnimationCache::getInstance()->addAnimation(createAnimation("reinforce_A3_00%02d.png", 25, 36, 0.05f),
 												"reinforce_A3_arrow");
 
+	// reinforce_B3_ move
+	AnimationCache::getInstance()->addAnimation(createAnimation("reinforce_B3_00%02d.png", 1, 6, 0.1f),
+												"reinforce_B3_move");
+
+	// reinforce_B3_ attack
+	AnimationCache::getInstance()->addAnimation(createAnimation("reinforce_B3_00%02d.png", 7, 24, 0.05f),
+												"reinforce_B3_attack");
+
+	// reinforce_B3_ arrow
+	AnimationCache::getInstance()->addAnimation(createAnimation("reinforce_B3_00%02d.png", 25, 39, 0.05f),
+												"reinforce_B3_arrow");
+
+	// reinforce_C3_ move
+	AnimationCache::getInstance()->addAnimation(createAnimation("reinforce_C3_00%02d.png", 1, 6, 0.1f),
+												"reinforce_C3_move");
+
+	// reinforce_C3_ attack
+	AnimationCache::getInstance()->addAnimation(createAnimation("reinforce_C3_00%02d.png", 7, 27, 0.05f),
+												"reinforce_C3_attack");
+
+	// reinforce_C3_ arrow
+	AnimationCache::getInstance()->addAnimation(createAnimation("reinforce_C3_00%02d.png", 28, 42, 0.05f),
+												"reinforce_C3_arrow");
+
 	// archers tower lvx atack down
 	Animation *animation;
 	// lv1
