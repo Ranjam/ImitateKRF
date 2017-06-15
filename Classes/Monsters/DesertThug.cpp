@@ -9,31 +9,18 @@ DesertThug::~DesertThug() {
 }
 
 bool DesertThug::init(int type, const std::vector<Vec2> &path) {
-	if (!Monster::init(type,
-					   path, 
-					   18.0f, // speed
-					   100, // hp
+	if (!Monster::init(100, // hp
 					   100, // max hp
-					   false // is dead
+					   18.0f, // speed
+					   100, // scope
+					   false, // is removed
+					   SpriteFrameCache::getInstance()->getSpriteFrameByName("desertThug_0067.png"),
+					   HP_Type::SMALL,
+					   type,
+					   path
 					   )) {
 		return false;
 	}
-
-	image_ = Sprite::createWithSpriteFrameName("desertThug_0067.png");
-	image_->setAnchorPoint(Vec2(0.5, 0));
-	this->addChild(image_, -1);
-	
-	hp_bg_ = Sprite::createWithSpriteFrameName("lifebar_bg_small.png");
-	hp_bg_->setPosition(0.0f, 40.0f);
-	this->addChild(hp_bg_, 0);
-
-	hp_prog_ = ProgressTimer::create(Sprite::createWithSpriteFrameName("lifebar_small.png"));
-	hp_prog_->setType(ProgressTimer::Type::BAR);
-	hp_prog_->setMidpoint(Vec2(0.0f, 0.5f));
-	hp_prog_->setScaleY(1.5f);
-	hp_prog_->setPercentage(100.0f);
-	hp_prog_->setPosition(0.0f, 40.0f);
-	this->addChild(hp_prog_, 1);
 
 	return true;
 }
@@ -66,12 +53,12 @@ void DesertThug::setState(MonsterState state) {
 		break;
 	case ATTACK_LEFT:
 		this->image_->setFlippedX(true);
-		animationAct = RepeatForever::create(Animate::create(AnimationCache::getInstance()->getAnimation("desert_thug_attack")));
-		break;
+		attack(0.16f);
+		return;
 	case ATTACK_RIGHT:
 		this->image_->setFlippedX(false);
-		animationAct = RepeatForever::create(Animate::create(AnimationCache::getInstance()->getAnimation("desert_thug_attack")));
-		break;
+		attack(0.16f);
+		return;
 	case STOP:
 		this->stopAllActions();
 		animationAct = RepeatForever::create(Animate::create(AnimationCache::getInstance()->getAnimation("desert_thug_stand")));
@@ -79,6 +66,25 @@ void DesertThug::setState(MonsterState state) {
 	}
 	animationAct->setTag(0);
 	image_->runAction(animationAct);
+}
+
+void DesertThug::attack(float dt) {
+	if (!target_->getIsRemoved()) {
+		this->image_->runAction(Sequence::create(Animate::create(AnimationCache::getInstance()->getAnimation("desert_thug_attack")),
+												 CallFunc::create([=]() {
+			target_->getDamage(30);
+			if (!target_->getIsRemoved()) {
+				scheduleOnce(schedule_selector(DesertThug::attack), 0.3f);
+			} else {
+				this->releaseTarget();
+				this->keepGoing();
+			}
+		}),
+												 NULL));
+	} else {
+		this->releaseTarget();
+		keepGoing();
+	}
 }
 
 void DesertThug::dying() {

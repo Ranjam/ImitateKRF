@@ -9,13 +9,12 @@ public:
 	~DesertThug();
 
 	static DesertThug* create(int type, const std::vector<Vec2> &path) {
-		DesertThug *pRet = new(std::nothrow) DesertThug(); 
+		auto pRet = new(std::nothrow) DesertThug(); 
 		if (pRet && pRet->init(type, path)) {
 			pRet->autorelease(); 
 			return pRet;
 		}
 		delete pRet;
-		pRet = nullptr;
 		return nullptr;
 	}
 
@@ -24,6 +23,8 @@ public:
 	void update(float dt) override;
 
 	void setState(MonsterState state) override;
+
+	void attack(float dt);
 
 	void dying() override;
 

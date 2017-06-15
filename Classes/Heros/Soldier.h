@@ -26,6 +26,9 @@ public:
 
 	void chase(float dt);
 	void attack(float dt);
+	void dying() override {
+		this->removeFromParent();
+	}
 
 private:
 	std::string name_;

@@ -5,17 +5,14 @@ Monster::Monster() { }
 
 Monster::~Monster() { }
 
-bool Monster::init(int type, const std::vector<Vec2>& path, float speed, int hp, int max_hp, bool is_removed) {
-	if (!Sprite::init()) {
+bool Monster::init(int hp, int max_hp, float speed, float scope, bool is_removed, SpriteFrame *sprite_frame, HP_Type hp_type,
+				   int type, const std::vector<Vec2>& path) {
+	if (!Creature::init(hp, max_hp, speed, scope, is_removed, sprite_frame, hp_type)) {
 		return false;
 	}
 
 	this->type_ = type;
 	this->path_ = path;
-	this->speed_ = speed;
-	this->hp_ = hp;
-	this->max_hp_ = max_hp;
-	this->is_removed_ = is_removed;
 	this->setPosition(path[0].x, path[0].y);
 
 	return true;
@@ -42,17 +39,10 @@ void Monster::keepGoing() {
 			setState(MonsterState::WALK_RIGHT);
 		}
 
-		float distance = this->path_[current_target_point_].getDistance(this->path_[current_target_point_ - 1]);
-		this->runAction(Sequence::create(MoveTo::create(distance / this->speed_, Vec2(path_[current_target_point_].x, path_[current_target_point_].y)), CallFunc::create(CC_CALLBACK_0(Monster::keepGoing, this)), NULL));
+		auto distance = this->path_[current_target_point_].getDistance(this->path_[current_target_point_ - 1]);
+		this->runAction(Sequence::create(MoveTo::create(distance / this->speed_, Vec2(path_[current_target_point_].x, path_[current_target_point_].y)), 
+										 CallFunc::create(CC_CALLBACK_0(Monster::keepGoing, this)),
+										 NULL));
 		++current_target_point_;
-	}
-}
-
-void Monster::getDamage(float damage) {
-	this->hp_ -= damage;
-	this->hp_prog_->setPercentage(static_cast<float>(this->hp_) / this->max_hp_ * 100);
-	if (this->hp_ <= 0) {
-		this->is_removed_ = true;
-		this->dying();
 	}
 }
